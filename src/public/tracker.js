@@ -205,10 +205,28 @@ function startVisualizer (dataSet) {
   receivers.conferenceAP = new Receiver('AP1-1', 'Conference Room', [192,165], Colours.WHITE, Receiver_Type.ACCESS_P, 1);
   receivers.conferenceAP = new Receiver('AP1-1', 'Conference Room', [192,165], Colours.WHITE, Receiver_Type.ACCESS_P, 1);
 
-
-
-
-
+  // Floor 1 phone initializing
+  receivers.frontDeskPhone = new Receiver('PHONE_FRONTDESK', 'Front Lobby', [1, 2], Colours.WHITE, Receiver_Type.PHONE, 1)
+  receivers.conferencePhone = new Receiver('PHONE_CONFERENCE', 'Conference Room', [1, 2], Colours.WHITE, Receiver_Type.PHONE, 1)
+  receivers.kitchenPhone = new Receiver('PHONE_KITCHEN', 'Kitchen', [1, 2], Colours.WHITE, Receiver_Type.PHONE, 1)
+  receivers.gymPhone = new Receiver('PHONE_GYM', 'Gym', [1, 2], Colours.WHITE, Receiver_Type.PHONE, 1)
+  receivers.poolPhone = new Receiver('PHONE_POOL', 'Pool', [1, 2], Colours.WHITE, Receiver_Type.PHONE, 1)
+  receivers.mensWashroomPhone = new Receiver('PHONE_MENS_WASHROOM', 'Mens Washroom', [1, 2], Colours.WHITE, Receiver_Type.PHONE, 1)
+  receivers.womensWashroomPhone = new Receiver('PHONE_WOMENS_WASHROOM', 'Womens Washroom', [1, 2], Colours.WHITE, Receiver_Type.PHONE, 1)
+  receivers.womensWashroomPhone = new Receiver('PHONE_WOMENS_WASHROOM', 'Womens Washroom', [1, 2], Colours.WHITE, Receiver_Type.PHONE, 1)
+  
+  // Floor 2 phone initializing
+  receivers.room210Phone = new Receiver('PHONE_210', 'Room 210', [1, 2], Colours.WHITE, Receiver_Type.PHONE, 2)
+  receivers.room220Phone = new Receiver('PHONE_220', 'Room 220', [1, 2], Colours.WHITE, Receiver_Type.PHONE, 2)
+  receivers.room231Phone = new Receiver('PHONE_231', 'Room 231', [1, 2], Colours.WHITE, Receiver_Type.PHONE, 2)
+  receivers.room232Phone = new Receiver('PHONE_232', 'Room 232', [1, 2], Colours.WHITE, Receiver_Type.PHONE, 2)
+  receivers.room233Phone = new Receiver('PHONE_233', 'Room 233', [1, 2], Colours.WHITE, Receiver_Type.PHONE, 2)
+  receivers.room235Phone = new Receiver('PHONE_235', 'Room 235', [1, 2], Colours.WHITE, Receiver_Type.PHONE, 2)
+  receivers.room236Phone = new Receiver('PHONE_236', 'Room 236', [1, 2], Colours.WHITE, Receiver_Type.PHONE, 2)
+  receivers.room241Phone = new Receiver('PHONE_241', 'Room 241', [1, 2], Colours.WHITE, Receiver_Type.PHONE, 2)
+  receivers.room244Phone = new Receiver('PHONE_244', 'Room 244', [1, 2], Colours.WHITE, Receiver_Type.PHONE, 2)
+  receivers.room247Phone = new Receiver('PHONE_247', 'Room 247', [1, 2], Colours.WHITE, Receiver_Type.PHONE, 2)
+  receivers.room248Phone = new Receiver('PHONE_248', 'Room 248', [1, 2], Colours.WHITE, Receiver_Type.PHONE, 2)
 
   visualizationArea.start(dataSet)
 }
