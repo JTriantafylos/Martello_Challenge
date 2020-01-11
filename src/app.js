@@ -10,13 +10,10 @@ for (const timestamp in dataSet) {
   }
 }
 
-// Replace epoch timestamps with a user-readable format in the dataset
-/*
+// Add an time field to each object in the dataset using epoch time
 for (const timestamp in dataSet) {
-  dataSet[new Date(timestamp * 1000).toLocaleString()] = dataSet[timestamp]
-  delete dataSet[timestamp]
+  dataSet[timestamp].time = timestamp
 }
-*/
 
 // Visualizer web server setup
 const express = require('express')
