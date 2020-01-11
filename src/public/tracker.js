@@ -21,6 +21,9 @@ const people = {}
 // Object to store each door object
 const doors = {}
 
+//Object to store each receiver object
+const receivers = {};
+
 const Colours = {
   RED: '#ff2915',
   BLUE: '#2925ff',
@@ -31,9 +34,32 @@ const Colours = {
   BLACK: '#000000',
   GRAY: '#707070',
   PINK: '#f280e3',
-  BROWN: '#964B00'
+  BROWN: '#964B00',
+  WHITE: '#FFFFFF'
+}
+const Receiver_Type ={
+
+    PHONE = 'phone',
+    M_SENSOR = "motion sensor",
+    ACCESS_P = "wifi"
 }
 
+class Receiver{
+
+    constructor(name, region, position, colour, type, floor){
+        this.name = name;
+        this.region = region;
+        this.position = position;
+        this.colour = colour;
+        this.type = type;
+        this.floor = floor;
+    }
+
+    setColour(col){
+        this.colour = col;
+    }
+
+}
 class Person {
   constructor (name, role, room, position, colour) {
     this.name = name
@@ -112,6 +138,9 @@ class Door {
   getSize () {
     return [this.width, this.height]
   }
+  setColour(col){
+    this.colour = col;
+  }
 }
 
 requestDataSet((dataSet) => {
@@ -167,6 +196,20 @@ function startVisualizer (dataSet) {
   people.salina = new Person('Salina', 'reception', 0, [0, 0], Colours.GRAY)
   people.harrison = new Person('Harrison', 'reception late-night', 0, [0, 0], Colours.GREEN)
 
+  //initializing receivers
+  receivers.conferenceAP = new Receiver('AP1-1', 'Conference Room', [192,165], Colours.WHITE, Receiver_Type.ACCESS_P, 1);
+  receivers.conferenceAP = new Receiver('AP1-1', 'Conference Room', [192,165], Colours.WHITE, Receiver_Type.ACCESS_P, 1);
+  receivers.conferenceAP = new Receiver('AP1-1', 'Conference Room', [192,165], Colours.WHITE, Receiver_Type.ACCESS_P, 1);
+  receivers.conferenceAP = new Receiver('AP1-1', 'Conference Room', [192,165], Colours.WHITE, Receiver_Type.ACCESS_P, 1);
+  receivers.conferenceAP = new Receiver('AP1-1', 'Conference Room', [192,165], Colours.WHITE, Receiver_Type.ACCESS_P, 1);
+  receivers.conferenceAP = new Receiver('AP1-1', 'Conference Room', [192,165], Colours.WHITE, Receiver_Type.ACCESS_P, 1);
+  receivers.conferenceAP = new Receiver('AP1-1', 'Conference Room', [192,165], Colours.WHITE, Receiver_Type.ACCESS_P, 1);
+
+
+
+
+
+
   visualizationArea.start(dataSet)
 }
 
@@ -184,7 +227,7 @@ const visualizationArea = {
   },
   // Function to stop the visualization
   stop: () => {
-    visualizationArea.canvas.clearInterval(visualizationArea.canvas.interval)
+    clearInterval(visualizationArea.canvas.interval)
   },
   // Function to clear the visualization area
   clear: () => {
@@ -194,11 +237,12 @@ const visualizationArea = {
 
 function drawDoors () {
   const cont = visualizationArea.canvas.context
-  cont.fillStyle = '#000000'
+  
   // cont.fillRect(0,0,100,100);
   Object.keys(doors).forEach(element => {
     const pos = doors[element].getPosition()
     const size = doors[element].getSize()
+    cont.fillStyle = doors[element].getColour();
     cont.fillRect(pos[0], pos[1], size[0], size[1])
   })
 }
@@ -221,7 +265,10 @@ function updateVisualization (dataSet) {
   // is through the timeline
   if (queuedUpdateTimeSeconds === dataTimeCurrentSeconds) {
     // Show the queued update
-    // console.log(queuedUpdate)
+    if(queuedUpdate['guest-id'] == 'Veronica'){
+        console.log(queuedUpdate);
+    }
+ 
 
     // Populate the queued update with the next update from the dataset
     queuedUpdateIndex++
