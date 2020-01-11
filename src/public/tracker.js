@@ -39,27 +39,43 @@ const Colours = {
 }
 const Receiver_Type ={
 
-    PHONE = 'phone',
-    M_SENSOR = "motion sensor",
-    ACCESS_P = "wifi"
-}
+    PHONE: 'phone',
+    M_SENSOR: "motion sensor",
+    D_SENSOR: 'door sensor',
+    ACCESS_P: "access point"
+}   
 
+const Receiver_ID = {
+
+    AP1_1:'ap1-1',
+    AP1_2:'ap1-2',
+    AP1_3:'ap1-3',
+    AP1_3:'ap1-4',
+    AP2_1:'ap2-1',
+    AP2_1:'ap2-2',
+    AP2_1:'ap2-3'
+}
 class Receiver{
 
-    constructor(name, region, position, colour, type, floor){
+    constructor(name, region, position, colour, type, floor, active){
         this.name = name;
         this.region = region;
         this.position = position;
         this.colour = colour;
         this.type = type;
         this.floor = floor;
+        this.active = active;
     }
 
     setColour(col){
         this.colour = col;
     }
+    toggle(){
+        this.active = !(this.active);
+    }
 
 }
+
 class Person {
   constructor (name, role, room, position, colour) {
     this.name = name
@@ -196,16 +212,21 @@ function startVisualizer (dataSet) {
   people.salina = new Person('Salina', 'reception', 0, [0, 0], Colours.GRAY)
   people.harrison = new Person('Harrison', 'reception late-night', 0, [0, 0], Colours.GREEN)
 
-  //initializing receivers
-  receivers.conferenceAP = new Receiver('AP1-1', 'Conference Room', [192,165], Colours.WHITE, Receiver_Type.ACCESS_P, 1);
-  receivers.conferenceAP = new Receiver('AP1-1', 'Conference Room', [192,165], Colours.WHITE, Receiver_Type.ACCESS_P, 1);
-  receivers.conferenceAP = new Receiver('AP1-1', 'Conference Room', [192,165], Colours.WHITE, Receiver_Type.ACCESS_P, 1);
-  receivers.conferenceAP = new Receiver('AP1-1', 'Conference Room', [192,165], Colours.WHITE, Receiver_Type.ACCESS_P, 1);
-  receivers.conferenceAP = new Receiver('AP1-1', 'Conference Room', [192,165], Colours.WHITE, Receiver_Type.ACCESS_P, 1);
-  receivers.conferenceAP = new Receiver('AP1-1', 'Conference Room', [192,165], Colours.WHITE, Receiver_Type.ACCESS_P, 1);
-  receivers.conferenceAP = new Receiver('AP1-1', 'Conference Room', [192,165], Colours.WHITE, Receiver_Type.ACCESS_P, 1);
+  //initializing access points, first floor
+  receivers.conferenceAP = new Receiver(Receiver_ID.AP1_1, 'Conference Room', [192,165], Colours.WHITE, Receiver_Type.ACCESS_P, 1);
+  receivers.lobbyAP = new Receiver('AP1-4', 'Front Lobby', [361,175], Colours.WHITE, Receiver_Type.ACCESS_P, 1);
+  receivers.diningAP = new Receiver('AP1-3', 'Dining Hall', [365,408], Colours.WHITE, Receiver_Type.ACCESS_P, 1);
+  receivers.hall_east_1AP = new Receiver('AP1-2', 'First Floor East Hall', [582,284], Colours.WHITE, Receiver_Type.ACCESS_P, 1);
+  
+  //initializing access points, second floor
+  receivers.hall_westAP = new Receiver('AP2-1', 'Second Floor West Hall', [268,655], Colours.WHITE, Receiver_Type.ACCESS_P, 2);
+  receivers.hall_centerAP = new Receiver('AP2-3', 'Second Floor Center Hall', [459,655], Colours.WHITE, Receiver_Type.ACCESS_P, 2);
+  receivers.hall_east_2AP = new Receiver('AP2-2', 'Second Floor East Hall', [588,655], Colours.WHITE, Receiver_Type.ACCESS_P, 2);
 
-
+  //initializing motion sensors
+  receivers.elevatorMS = new Receiver('Elevator Sensor', 'Elevator', [363,291,363,662], Colours.WHITE,Receiver_Type.M_SENSOR, 1);
+  receivers.stairMS = new Receiver('Stair Sensor', 'Stairwell Sensor', [715,291,715,662], Colours.WHITE,Receiver_Type.M_SENSOR, 1)
+  receivers.v_machineMS = new Receiver('Ice Sensor', 'Ice/Vending Machines', [363,799], Colours.WHITE,Receiver_Type.M_SENSOR, 2)
 
 
 
@@ -266,7 +287,11 @@ function updateVisualization (dataSet) {
   if (queuedUpdateTimeSeconds === dataTimeCurrentSeconds) {
     // Show the queued update
     if(queuedUpdate['guest-id'] == 'Veronica'){
-        console.log(queuedUpdate);
+        if(queuedUpdate['device'] == Receiver_Type.ACCESS_P){
+            console.log(queuedUpdate['device-id'])
+
+        }
+        
     }
  
 
