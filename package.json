@@ -1,0 +1,27 @@
+{
+  "name": "martello_challenge",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JTriantafylos/Martello_Challenge.git"
+  },
+  "author": "James Triantafylos, Eyas Valdez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JTriantafylos/Martello_Challenge/issues"
+  },
+  "homepage": "https://github.com/JTriantafylos/Martello_Challenge#readme",
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1"
+  }
+}
