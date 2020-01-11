@@ -11,10 +11,12 @@ for (const timestamp in dataSet) {
 }
 
 // Replace epoch timestamps with a user-readable format in the dataset
+/*
 for (const timestamp in dataSet) {
   dataSet[new Date(timestamp * 1000).toLocaleString()] = dataSet[timestamp]
   delete dataSet[timestamp]
 }
+*/
 
 // Visualizer web server setup
 const express = require('express')
@@ -22,10 +24,9 @@ const app = express()
 const port = 3000
 
 // Visualizer web server routes
-app.get('/', express.static('public'))
 app.get('/data', (req, res) => {
   res.json(dataSet)
 })
+app.use('/', express.static('public'))
 
 app.listen(port, () => console.log('Visualizer web server started!'))
-

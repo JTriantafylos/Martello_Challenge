@@ -1,8 +1,8 @@
 // Sync function to request the dataset from the backend
-function requestDataSet() {
+function requestDataSet(callback) {
   const request = new XMLHttpRequest()
-  request.onload = (response) => {
-    return response
+  request.onload = (res) => {
+    callback(res.target.response)
   }
   request.open('GET', 'http://localhost:3000/data')
   request.send()
