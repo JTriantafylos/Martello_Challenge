@@ -13,6 +13,7 @@ let queuedUpdate
 // Number of seconds since epoch until the timestamp of the next queued update
 let queuedUpdateTimeSeconds
 
+// The index of the currently queued updated within the dataset
 let queuedUpdateIndex = 0
 
 // Object to store each Person object
@@ -47,7 +48,8 @@ const receiverType = {
 
 const receiverID = {
   // Phone IDs
-  PHONE_100: 'reception',
+  PHONE_FRONT_DESK: 'reception',
+  PHONE_100: 'lobby',
   PHONE_110: '110',
   PHONE_130: '130',
   PHONE_151: '151',
@@ -78,7 +80,7 @@ const receiverID = {
   // Motion sensors IDs
   MS1: 'stairwell',
   MS2: 'elevator',
-  MS3: 'vending machine'
+  MS3: 'ice machine'
 }
 class Receiver {
   constructor (name, region, position, colour, type, floor, active) {
@@ -185,7 +187,7 @@ class Door {
 }
 
 requestDataSet((dataSet) => {
-  dataSet = JSON.parse(dataSet)
+ dataSet = JSON.parse(dataSet)
   queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
   queuedUpdateTimeSeconds = parseInt(Object.keys(dataSet)[queuedUpdateIndex])
   startTimeSeconds = parseInt(Object.keys(dataSet)[queuedUpdateIndex])
@@ -194,34 +196,37 @@ requestDataSet((dataSet) => {
 
 function startVisualizer (dataSet) {
   // initializing first floor doors
-  doors.conference = new Door(110, [258, 160], false, Colours.BROWN)
+  doors.conference = new Door('110', [258, 160], false, Colours.BROWN)
   doors.conference.rotate()
-  doors.kitchen = new Door(130, [258, 400], false, Colours.BROWN)
+  doors.dining = new Door('105', [270, 320], false, Colours.BROWN)
+  doors.kitchen = new Door('130', [258, 400], false, Colours.BROWN)
   doors.kitchen.rotate()
-  doors.gym = new Door(151, [503, 246], false, Colours.BROWN)
-  doors.reception = new Door(101, [463, 119], false, Colours.BROWN)
+  doors.gym = new Door('151', [503, 246], false, Colours.BROWN)
+  doors.mens_washroom = new Door('152', [484, 324], false, Colours.BROWN)
+  doors.womens_washroom = new Door('154', [562, 324], false, Colours.BROWN)
+  doors.reception = new Door('101', [463, 119], false, Colours.BROWN)
   doors.reception.rotate()
-  doors.pool = new Door(155, [620, 246], false, Colours.BROWN)
-  doors.laundry = new Door(156, [636, 326], false, Colours.BROWN)
-  doors.storage = new Door(1566, [636, 388], false, Colours.BROWN)
-  doors.stairwell_1 = new Door(150, [680, 259], false, Colours.BROWN)
+  doors.pool = new Door('155', [620, 246], false, Colours.BROWN)
+  doors.laundry = new Door('156', [636, 326], false, Colours.BROWN)
+  doors.storage = new Door('156b', [636, 388], false, Colours.BROWN)
+  doors.stairwell_1 = new Door('150', [680, 259], false, Colours.BROWN)
   doors.stairwell_1.rotate()
 
   // initializing second floor doors
-  doors.executive_1 = new Door(210, [218, 614], false, Colours.BROWN)
+  doors.executive_1 = new Door('210', [218, 614], false, Colours.BROWN)
   doors.executive_1.rotate()
-  doors.executive_2 = new Door(220, [218, 674], false, Colours.BROWN)
+  doors.executive_2 = new Door('220', [218, 674], false, Colours.BROWN)
   doors.executive_2.rotate()
-  doors.comfort_1 = new Door(231, [256, 591], false, Colours.BROWN)
-  doors.comfort_2 = new Door(232, [256, 725], false, Colours.BROWN)
-  doors.comfort_3 = new Door(233, [344, 591], false, Colours.BROWN)
-  doors.comfort_4 = new Door(235, [439, 591], false, Colours.BROWN)
-  doors.comfort_5 = new Door(236, [439, 725], false, Colours.BROWN)
-  doors.comfort_6 = new Door(241, [534, 619], false, Colours.BROWN)
-  doors.comfort_7 = new Door(244, [534, 697], false, Colours.BROWN)
-  doors.comfort_8 = new Door(247, [622, 619], false, Colours.BROWN)
-  doors.comfort_9 = new Door(248, [622, 697], false, Colours.BROWN)
-  doors.stairwell_2 = new Door(250, [682, 670], false, Colours.BROWN)
+  doors.comfort_1 = new Door('231', [256, 591], false, Colours.BROWN)
+  doors.comfort_2 = new Door('232', [256, 725], false, Colours.BROWN)
+  doors.comfort_3 = new Door('233', [344, 591], false, Colours.BROWN)
+  doors.comfort_4 = new Door('235', [439, 591], false, Colours.BROWN)
+  doors.comfort_5 = new Door('236', [439, 725], false, Colours.BROWN)
+  doors.comfort_6 = new Door('241', [534, 619], false, Colours.BROWN)
+  doors.comfort_7 = new Door('244', [534, 697], false, Colours.BROWN)
+  doors.comfort_8 = new Door('247', [622, 619], false, Colours.BROWN)
+  doors.comfort_9 = new Door('248', [622, 697], false, Colours.BROWN)
+  doors.stairwell_2 = new Door('250', [682, 670], false, Colours.BROWN)
   doors.stairwell_2.rotate()
 
   // initializing guests
@@ -238,6 +243,7 @@ function startVisualizer (dataSet) {
   people.harrison = new Person('Harrison', 'reception late-night', 0, [0, 0], Colours.GREEN)
 
   // Floor 1 phone initializing
+  receivers.frontDeskPhone = new Receiver(receiverID.PHONE_FRONT_DESK, 'Reception Desk', [1, 2], Colours.WHITE, receiverType.PHONE, 1)
   receivers.room100Phone = new Receiver(receiverID.PHONE_100, 'Front Lobby', [1, 2], Colours.WHITE, receiverType.PHONE, 1)
   receivers.room110Phone = new Receiver(receiverID.PHONE_110, 'Conference Room', [1, 2], Colours.WHITE, receiverType.PHONE, 1)
   receivers.room130Phone = new Receiver(receiverID.PHONE_130, 'Kitchen', [1, 2], Colours.WHITE, receiverType.PHONE, 1)
@@ -247,6 +253,7 @@ function startVisualizer (dataSet) {
   receivers.room154Phone = new Receiver(receiverID.PHONE_154, 'Womens Washroom', [1, 2], Colours.WHITE, receiverType.PHONE, 1)
 
   // Floor 2 phone initializing
+  receivers.room200Phone = new Receiver(receiverID.PHONE_200, 'Floor 2 Hallway', [1, 2], Colours.WHITE, receiverType.PHONE, 2)
   receivers.room210Phone = new Receiver(receiverID.PHONE_210, 'Room 210', [1, 2], Colours.WHITE, receiverType.PHONE, 2)
   receivers.room220Phone = new Receiver(receiverID.PHONE_220, 'Room 220', [1, 2], Colours.WHITE, receiverType.PHONE, 2)
   receivers.room231Phone = new Receiver(receiverID.PHONE_231, 'Room 231', [1, 2], Colours.WHITE, receiverType.PHONE, 2)
@@ -261,9 +268,9 @@ function startVisualizer (dataSet) {
 
   // initializing access points, first floor
   receivers.room110AP = new Receiver(receiverID.AP1_1, 'Conference Room', [192, 165], Colours.WHITE, receiverType.ACCESS_P, 1)
-  receivers.hallEastAP_1 = new Receiver(receiverID.AP1_2, 'First Floor East Hall', [582, 284], Colours.WHITE, receiverType.ACCESS_P, 1)
   receivers.room105AP = new Receiver(receiverID.AP1_3, 'Dining Hall', [365, 408], Colours.WHITE, receiverType.ACCESS_P, 1)
   receivers.room100AP = new Receiver(receiverID.AP1_4, 'Front Lobby', [361, 175], Colours.WHITE, receiverType.ACCESS_P, 1)
+  receivers.hallEastAP_1 = new Receiver(receiverID.AP1_2, 'First Floor East Hall', [582, 284], Colours.WHITE, receiverType.ACCESS_P, 1)
 
   // initializing access points, second floor
   receivers.hallWestAP = new Receiver(receiverID.AP2_1, 'Second Floor West Hall', [268, 655], Colours.WHITE, receiverType.ACCESS_P, 2)
@@ -271,9 +278,9 @@ function startVisualizer (dataSet) {
   receivers.hallCenterAP = new Receiver(receiverID.AP2_3, 'Second Floor Center Hall', [459, 655], Colours.WHITE, receiverType.ACCESS_P, 2)
 
   // initializing motion sensors
-  receivers.stairMS = new Receiver(receivers.MS1, 'Stairwell Sensor', [715, 291, 715, 662], Colours.WHITE, receiverType.M_SENSOR, 1)
-  receivers.elevatorMS = new Receiver(receivers.MS2, 'Elevator', [363, 291, 363, 662], Colours.WHITE, receiverType.M_SENSOR, 1)
-  receivers.room234MS = new Receiver(receivers.MS3, 'Ice/Vending Machines', [363, 799], Colours.WHITE, receiverType.M_SENSOR, 2)
+  receivers.stairMS = new Receiver(receiverID.MS1, 'Stairwell Sensor', [715, 291, 715, 662], Colours.WHITE, receiverType.M_SENSOR, 1)
+  receivers.elevatorMS = new Receiver(receiverID.MS2, 'Elevator', [363, 291, 363, 662], Colours.WHITE, receiverType.M_SENSOR, 1)
+  receivers.room234MS = new Receiver(receiverID.MS3, 'Ice/Vending Machines', [363, 799], Colours.WHITE, receiverType.M_SENSOR, 2)
 
   visualizationArea.start(dataSet)
 }
@@ -288,7 +295,7 @@ const visualizationArea = {
     visualizationArea.canvas.height = 857
     visualizationArea.canvas.context = visualizationArea.canvas.getContext('2d')
     document.body.insertBefore(visualizationArea.canvas, document.body.childNodes[0])
-    visualizationArea.canvas.interval = setInterval(() => updateVisualization(dataSet), 1)
+    visualizationArea.canvas.interval = setInterval(() => checkUpdate(dataSet), 1)
   },
   // Function to stop the visualization
   stop: () => {
@@ -312,8 +319,8 @@ function drawDoors () {
   })
 }
 
-// Function to update the visualization area
-function updateVisualization (dataSet) {
+// Function to check if a visualization update is required
+function checkUpdate (dataSet) {
   // Calculate the amount of seconds the visualization is through the dataset timeline
   const dataTimeCurrentSeconds = startTimeSeconds + dataTimeElapsedSeconds
 
@@ -322,22 +329,9 @@ function updateVisualization (dataSet) {
     visualizationArea.stop()
   }
 
-  // Clear the visualization area
-  visualizationArea.clear()
-  drawDoors()
-
-  // Check if the queued update occurred at the current point that the visualization
-  // is through the timeline
+  // Check if it is time for the queued update to be taken
   if (queuedUpdateTimeSeconds === dataTimeCurrentSeconds) {
-    // Show the queued update
-    if (queuedUpdate['guest-id'] === 'Veronica') {
-      const queuedUpdateReceiver = Object.values(receivers).filter(receiver => {
-        return receiver.name === queuedUpdate['device-id']
-      })[0]
-      console.log(queuedUpdateReceiver)
-      console.log(queuedUpdate['device-id'])
-    }
-
+    updateVisualization()
     // Populate the queued update with the next update from the dataset
     queuedUpdateIndex++
     queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
@@ -346,4 +340,31 @@ function updateVisualization (dataSet) {
 
   // Increase the elapsed seconds counter by 1
   dataTimeElapsedSeconds++
+}
+
+// Function to update the visualization area
+function updateVisualization () {
+  // Clear the visualization area
+  visualizationArea.clear()
+
+  // Draw the doors to the canvas
+  drawDoors()
+
+  // Check if the queued update is a door sensor update
+  if (queuedUpdate.device === 'door sensor') {
+    // Update the door state
+    const queuedUpdateDoor = Object.values(doors).filter(door => {
+      return door.room === queuedUpdate['device-id']
+    })[0]
+
+    if (queuedUpdateDoor === undefined) { console.error('UNDEFINED!') }
+    console.log(queuedUpdate['device-id'])
+  } else {
+    // Update the receiver state
+    const queuedUpdateReceiver = Object.values(receivers).filter(receiver => {
+      return receiver.name === queuedUpdate['device-id']
+    })[0]
+    if (queuedUpdateReceiver === undefined) { console.error('UNDEFINED!') }
+    console.log(queuedUpdate['device-id'])
+  }
 }
