@@ -288,20 +288,22 @@ function startVisualizer (dataSet) {
   receivers.elevatorMS = new Receiver(receiverID.MS2, 'Elevator', [363, 291, 363, 662], Colours.WHITE, receiverType.M_SENSOR, 1)
   receivers.room234MS = new Receiver(receiverID.MS3, 'Ice/Vending Machines', [363, 799], Colours.WHITE, receiverType.M_SENSOR, 2)
 
-  visualizationArea.start(dataSet)
+  visualizationArea.dataSet = dataSet
+  visualizationArea.start()
 }
 
 // Visualization area object
 const visualizationArea = {
   canvas: document.createElement('canvas'),
+  dataset: {},
 
   // Function to start the visualization
-  start: (dataSet) => {
+  start: () => {
     visualizationArea.canvas.width = 785
     visualizationArea.canvas.height = 857
     visualizationArea.canvas.context = visualizationArea.canvas.getContext('2d')
     document.body.insertBefore(visualizationArea.canvas, document.body.childNodes[0])
-    visualizationArea.canvas.interval = setInterval(() => checkUpdate(dataSet), 1)
+    // visualizationArea.canvas.interval = setInterval(() => checkUpdate(visualizationArea.dataSet), 1)
   },
   // Function to stop the visualization
   stop: () => {
@@ -350,11 +352,10 @@ function checkUpdate (dataSet) {
 
 // Function to update the visualization area
 function updateVisualization () {
+  console.log(queuedUpdate)
+
   // Clear the visualization area
   visualizationArea.clear()
-
-  // Draw the doors to the canvas
-  drawDoors()
 
   // Check if the queued update is a door sensor update
   if (queuedUpdate.device === receiverType.D_SENSOR) {
@@ -382,5 +383,27 @@ function updateVisualization () {
       return receiver.name === queuedUpdate['device-id']
     })[0]
     if (queuedUpdateReceiver === undefined) { console.error('UNDEFINED!') }
+  }
+
+  // Draw the doors to the canvas
+  drawDoors()
+
+  document.getElementById('updateCounter').textContent = 'Updates displayed: ' + (queuedUpdateIndex + 1)
+  document.getElementById('updateInfo').textContent = 'Update Info: ' + queuedUpdate.event + '|' + queuedUpdate['device-id'] + '|' + queuedUpdate['guest-id']
+}
+
+document.getElementById('nextAction').addEventListener('click', nextAction)
+function nextAction () {
+  const dataSet = visualizationArea.dataSet
+
+  if (queuedUpdateIndex < Object.keys(dataSet).length) {
+    // Advance to the next queued update
+    queuedUpdateIndex++
+    queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
+    queuedUpdateTimeSeconds = parseInt(Object.keys(dataSet)[queuedUpdateIndex])
+    startTimeSeconds = parseInt(Object.keys(dataSet)[queuedUpdateIndex])
+
+    // Update the visualization with the next action
+    updateVisualization()
   }
 }
