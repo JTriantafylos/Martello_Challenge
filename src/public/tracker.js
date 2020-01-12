@@ -483,8 +483,17 @@ function nextAction () {
   if (queuedUpdateIndex >= Object.keys(dataSet).length || queuedUpdateIndex < -1) {
     console.log(queuedUpdateIndex)
     alert('This is the end of the updates!')
+    clearInterval(visualizationArea.canvas.interval)
     return
   }
+
+  const lastPingList = document.getElementById('lastPingList')
+  lastPingList.innerHTML = ''
+  Object.values(people).forEach((person) => {
+    const item = document.createElement('li')
+    item.textContent = person.getName() + '\'s time since last move: ' + new Date(currentTime - parseInt(person.getConnection()[1])).getTime() + ' seconds' + ' | last AP: ' + person.getConnection()[0].name
+    lastPingList.appendChild(item)
+  })
 
   // Advance to the next queued update
   queuedUpdateIndex++
@@ -508,7 +517,6 @@ function nextFollowedAction () {
       return
     }
     queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
-
   } while (!selectedPeople.includes(queuedUpdate['guest-id']) && queuedUpdate.device !== 'motion sensor' && queuedUpdate.device !== 'phone')
 
   // Update the visualization with the next action
@@ -544,7 +552,6 @@ function prevFollowedAction () {
       return
     }
     queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
-
   } while (!selectedPeople.includes(queuedUpdate['guest-id']) && queuedUpdate.device !== 'motion sensor' && queuedUpdate.device !== 'phone')
 
   // Rewind to the previous queued update
@@ -723,51 +730,45 @@ requestDataSet((dataSet) => {
   startVisualizer(dataSet)
 })
 
+class AccessP {
+  constructor (name, position, adjacentRooms) {
+    this.name = name
+    this.position = position
+    this.adjacentRooms = adjacentRooms
+  }
 
-class AccessP{
-    constructor(name, position, adjacentRooms) {
-        this.name = name;
-        this.position = position;
-        this.adjacentRooms = adjacentRooms;
-
-    }
-    getAdjacentRooms(){
-        return this.adjacentRooms;
-    }
+  getAdjacentRooms () {
+    return this.adjacentRooms
+  }
 }
 
-//doing the prediction
-let accessPoints = {};
+// doing the prediction
+const accessPoints = {}
 document.getElementById('makePrediction').addEventListener('click', () => predict())
 
+accessPoints.ap1_1 = new AccessP(receiverID.AP1_1, [192, 165], [])
+accessPoints.ap1_2 = new AccessP(receiverID.AP1_2, [582, 284], ['151', '155', '152', '154', '156', '151'])
+accessPoints.ap1_3 = new AccessP(receiverID.AP1_3, [365, 408], ['kitchen'])
+accessPoints.ap1_4 = new AccessP(receiverID.AP1_4, [361, 175], ['elevator', 'conference', 'entrance', 'reception'])
 
+accessPoints.ap2_1 = new AccessP(receiverID.AP2_1, [268, 655], ['210', '231', '220', '232'])
+accessPoints.ap2_2 = new AccessP(receiverID.AP2_2, [588, 655], ['235', '236'])
+accessPoints.ap2_3 = new AccessP(receiverID.AP2_3, [459, 655], ['241', '244', '247', '248'])
 
-accessPoints.ap1_1 = new AccessP(receiverID.AP1_1, [192, 165], []);
-accessPoints.ap1_2 = new AccessP(receiverID.AP1_2, [582, 284], ['151', '155', '152', '154', '156', '151']);
-accessPoints.ap1_3 = new AccessP(receiverID.AP1_3, [365, 408], ['kitchen']);
-accessPoints.ap1_4 = new AccessP(receiverID.AP1_4, [361, 175], ['elevator', 'conference', 'entrance', 'reception']);
-
-accessPoints.ap2_1 = new AccessP(receiverID.AP2_1, [268, 655], ['210', '231', '220', '232']);
-accessPoints.ap2_2 = new AccessP(receiverID.AP2_2, [588, 655], ['235', '236']);
-accessPoints.ap2_3 = new AccessP(receiverID.AP2_3, [459, 655], ['241', '244', '247', '248']);
-
-function findSensor(roomNum){
-    let ret
-    Object.keys(accessPoints).forEach(element => {
-        
-        (accessPoints[element].getAdjacentRooms()).forEach(room =>{
-            
-            if(room === roomNum){
-                ret = accessPoints[element];
-            }
-        })
-    });
-    return ret;
+function findSensor (roomNum) {
+  let ret
+  Object.keys(accessPoints).forEach(element => {
+    (accessPoints[element].getAdjacentRooms()).forEach(room => {
+      if (room === roomNum) {
+        ret = accessPoints[element]
+      }
+    })
+  })
+  return ret
 }
-function predict(){
-    let murderRoom = '210';
-    let sensor = findSensor(murderRoom);
-    console.log(sensor);
-    gotoUpdate(452);
-    
+function predict () {
+  const murderRoom = '210'
+  const sensor = findSensor(murderRoom)
+  console.log(sensor)
+  gotoUpdate(452)
 }
