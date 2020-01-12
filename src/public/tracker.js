@@ -319,7 +319,7 @@ function startVisualizer (dataSet) {
 
 // Visualization area object
 const visualizationArea = {
-  canvas: document.createElement('canvas'),
+  canvas: document.getElementById('visualizationArea'),
   dataset: {},
   paused: true,
 
@@ -328,7 +328,6 @@ const visualizationArea = {
     visualizationArea.canvas.width = 785
     visualizationArea.canvas.height = 857
     visualizationArea.canvas.context = visualizationArea.canvas.getContext('2d')
-    document.body.insertBefore(visualizationArea.canvas, document.body.childNodes[0])
     drawDoors()
   },
   // Function to pause the visualization
