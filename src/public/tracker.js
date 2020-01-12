@@ -29,7 +29,7 @@ let queuedUpdate
 let queuedUpdateTimeSeconds
 
 // The index of the currently queued updated within the dataset
-let queuedUpdateIndex = 0
+let queuedUpdateIndex = -1
 
 // Object to store each Person object
 const people = {}
@@ -385,33 +385,30 @@ function drawReceivers () {
         cont.beginPath()
         cont.arc(pos[0], pos[1], rad, 0, 2 * Math.PI, false)
         cont.fill()
-        }else if(receivers[element].isActive()){
-            //motion sensors
-            if(receivers[element].getName() !== receiverID.MS3){
-                const pos = receivers[element].getPosition()
-                cont.globalAlpha = 0.5
-                cont.fillStyle = receivers[element].getColour()
-                // cont.fillRect(pos[0], pos[1], 20, 20)
-                cont.beginPath()
-                cont.arc(pos[0], pos[1], 64, 0, 2 * Math.PI, false)
-                cont.fill()
-                cont.arc(pos[2], pos[3], 64, 0, 2 * Math.PI, false)
-                cont.fill()
-
-            }else{
-                
-                const pos = receivers[element].getPosition()
-                cont.globalAlpha = 0.5
-                cont.fillStyle = receivers[element].getColour()
-                // cont.fillRect(pos[0], pos[1], 20, 20)
-                cont.beginPath()
-                cont.arc(pos[0], pos[1], 64, 0, 2 * Math.PI, false)
-                cont.fill()
-            }
-            
-            receivers[element].toggle();
-
+      } else if (receivers[element].isActive()) {
+        // motion sensors
+        if (receivers[element].getName() !== receiverID.MS3) {
+          const pos = receivers[element].getPosition()
+          cont.globalAlpha = 0.5
+          cont.fillStyle = receivers[element].getColour()
+          // cont.fillRect(pos[0], pos[1], 20, 20)
+          cont.beginPath()
+          cont.arc(pos[0], pos[1], 64, 0, 2 * Math.PI, false)
+          cont.fill()
+          cont.arc(pos[2], pos[3], 64, 0, 2 * Math.PI, false)
+          cont.fill()
+        } else {
+          const pos = receivers[element].getPosition()
+          cont.globalAlpha = 0.5
+          cont.fillStyle = receivers[element].getColour()
+          // cont.fillRect(pos[0], pos[1], 20, 20)
+          cont.beginPath()
+          cont.arc(pos[0], pos[1], 64, 0, 2 * Math.PI, false)
+          cont.fill()
         }
+
+        receivers[element].toggle()
+      }
     })
   })
 }
@@ -485,24 +482,22 @@ function updateVisualization () {
     }
   } else if (queuedUpdate.device === receiverType.M_SENSOR) {
     const queuedUpdateReceiver = Object.values(receivers).filter(receiver => {
-        return receiver.getName() === queuedUpdate['device-id']
-      })[0]
-      if(queuedUpdateReceiver != undefined){
-        queuedUpdateReceiver.toggle();
-      }else{
-          console.log('undefined sensor')
-      }
-     
-     
-  }else if(queuedUpdate.device === receiverType.PHONE){
+      return receiver.getName() === queuedUpdate['device-id']
+    })[0]
+    if (queuedUpdateReceiver != undefined) {
+      queuedUpdateReceiver.toggle()
+    } else {
+      console.log('undefined sensor')
+    }
+  } else if (queuedUpdate.device === receiverType.PHONE) {
     const queuedUpdateReceiver = Object.values(receivers).filter(receiver => {
-        return receiver.getName() === queuedUpdate['device-id']
-      })[0]
-      if(queuedUpdateReceiver !== undefined){
-          queuedUpdateReceiver.toggle();
-      }else{
-        console.log('undefined phone')
-      }
+      return receiver.getName() === queuedUpdate['device-id']
+    })[0]
+    if (queuedUpdateReceiver !== undefined) {
+      queuedUpdateReceiver.toggle()
+    } else {
+      console.log('undefined phone')
+    }
   }
 
   // Draw the doors to the canvas
@@ -521,20 +516,23 @@ function nextAction () {
   const dataSet = visualizationArea.dataSet
 
   if (queuedUpdateIndex < Object.keys(dataSet).length - 1) {
-    // Update the visualization with the next action
-    updateVisualization()
-
     // Advance to the next queued update
     queuedUpdateIndex++
     queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
     queuedUpdateTimeSeconds = parseInt(Object.keys(dataSet)[queuedUpdateIndex])
     startTimeSeconds = parseInt(Object.keys(dataSet)[queuedUpdateIndex])
+
+    // Update the visualization with the next action
+    updateVisualization()
   }
 }
 
 // Function to goto a specific action
 function gotoAction (actionNumber) {
+  document.getElementById('gotoActionInput').value = ''
+
   queuedUpdateIndex = 0
+  startVisualizer(visualizationArea.dataSet)
 
   for (let i = 0; i < actionNumber; i++) {
     nextAction()
@@ -561,3 +559,4 @@ const personSelectCheckboxes = document.getElementsByName('personSelect')
 personSelectCheckboxes.forEach((checkbox) => {
   checkbox.addEventListener('change', selectPerson)
 })
+document.getElementById('gotoActionSubmit').addEventListener('click', () => gotoAction(document.getElementById('gotoActionInput').value))
