@@ -4,6 +4,7 @@
 // TODO 'next action' for person being tracked
 // TODO graph activity
 // TODO Average distance from room
+// TODO tool tips  - last connected
 
 // The people selected to be followed
 const checkboxesArray = Array.prototype.slice.call(document.getElementsByName('personSelect'))
@@ -32,13 +33,13 @@ let queuedUpdateTimeSeconds
 let queuedUpdateIndex = -1
 
 // Object to store each Person object
-const people = {}
+let people = {}
 
 // Object to store each door object
-const doors = {}
+let doors = {}
 
 // Object to store each receiver object
-const receivers = {}
+let receivers = {}
 
 const Colours = {
   RED: '#ff2915',
@@ -224,8 +225,14 @@ requestDataSet((dataSet) => {
   startVisualizer(dataSet)
 })
 
-function startVisualizer (dataSet) {
+function startVisualizer (dataSet) { 
+  //resetting global arrays
+  doors = {}
+  people = {}
+  receivers = {}
+
   // initializing first floor doors
+ 
   doors.conference = new Door('110', Colours.BROWN, [258, 160], false)
   doors.conference.rotate()
   // doors.dining = new Door('105', [270, 320], false, Colours.BROWN)
@@ -407,9 +414,6 @@ function drawReceivers () {
                 receivers[element].toggle();
             }
         }
-
-        receivers[element].toggle()
-      }
     })
   })
 }
@@ -532,7 +536,7 @@ function nextAction () {
 function gotoAction (actionNumber) {
   document.getElementById('gotoActionInput').value = ''
 
-  queuedUpdateIndex = 0
+  queuedUpdateIndex = -1
   startVisualizer(visualizationArea.dataSet)
 
   for (let i = 0; i < actionNumber; i++) {
@@ -549,7 +553,7 @@ function selectPerson () {
     return element.value
   })
 
-  updateVisualization()
+  gotoAction(queuedUpdateIndex+1)
 }
 
 // HTML element event listeners
