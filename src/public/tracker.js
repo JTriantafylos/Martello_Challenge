@@ -219,12 +219,9 @@ function startVisualizer (dataSet) {
 
   doors.conference = new Door('110', Colours.BROWN, [258, 160], false)
   doors.conference.rotate()
-  // doors.dining = new Door('105', [270, 320], false, Colours.BROWN)
   doors.kitchen = new Door('130', Colours.BROWN, [258, 400], false)
   doors.kitchen.rotate()
   doors.gym = new Door('151', Colours.BROWN, [503, 246], false)
-  // doors.mens_washroom = new Door('152', [484, 324], false, Colours.BROWN)
-  // doors.womens_washroom = new Door('154', [562, 324], false, Colours.BROWN)
   doors.reception = new Door('101', Colours.BROWN, [463, 119], false)
   doors.reception.rotate()
   doors.pool = new Door('155', Colours.BROWN, [620, 246], false)
@@ -325,7 +322,7 @@ const visualizationArea = {
   play: () => {
     if (visualizationArea.paused) {
       visualizationArea.paused = false
-      visualizationArea.canvas.interval = setInterval(() => nextAction(), 500)
+      visualizationArea.canvas.interval = setInterval(() => nextAction(), 250)
     }
   },
   // Function to pause the visualization
@@ -472,10 +469,10 @@ function updateVisualization () {
   drawReceivers()
 
   // Update display info
-  document.getElementById('updateCounter').textContent = 'Updates Displayed: ' + (queuedUpdateIndex + 1)
+  document.getElementById('updateCounter').textContent = 'Updates Visualized: ' + (queuedUpdateIndex + 1)
   document.getElementById('updateInfo').textContent = 'Current Event: ' + queuedUpdate.event + ' | ' + queuedUpdate['device-id'] + ' | ' + queuedUpdate['guest-id']
   currentTime = queuedUpdate.time
-  document.getElementById('currentTime').textContent = 'Current Time: ' + new Date(parseInt(queuedUpdate.time * 1000)).toLocaleTimeString()
+  document.getElementById('currentTime').textContent = 'Current Time: ' + new Date(parseInt(queuedUpdate.time * 1000)).toLocaleString()
 }
 
 // Function to visualize the next action in the dataset
@@ -504,13 +501,14 @@ function nextFollowedAction () {
   // Advance to the next queued update
   do {
     queuedUpdateIndex++
-    queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
-
     // Check if the user is attemping to access an update that does not exist
     if (queuedUpdateIndex >= Object.keys(dataSet).length || queuedUpdateIndex < -1) {
+      queuedUpdateIndex--
       alert('This person has no more updates!')
       return
     }
+    queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
+
   } while (!selectedPeople.includes(queuedUpdate['guest-id']) && queuedUpdate.device !== 'motion sensor' && queuedUpdate.device !== 'phone')
 
   // Update the visualization with the next action
@@ -522,18 +520,14 @@ function prevAction () {
   const dataSet = visualizationArea.dataSet
 
   // Check if the user is attemping to access an update that does not exist
-  if (queuedUpdateIndex >= Object.keys(dataSet).length || queuedUpdateIndex < 0) {
+  if (queuedUpdateIndex > Object.keys(dataSet).length || queuedUpdateIndex < 0) {
     console.log(queuedUpdateIndex)
     alert('This is the end of the updates!')
     return
   }
 
   // Rewind to the previous queued update
-  queuedUpdateIndex--
-  queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
-
-  // Update the visualization with the next action
-  updateVisualization()
+  gotoUpdate(queuedUpdateIndex)
 }
 
 // Function to visualize the previous action in the dataset that involves a followed person
@@ -543,17 +537,18 @@ function prevFollowedAction () {
   // Rewind to the previous queued update
   do {
     queuedUpdateIndex--
-    queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
-
     // Check if the user is attemping to access an update that does not exist
     if (queuedUpdateIndex >= Object.keys(dataSet).length || queuedUpdateIndex < 0) {
+      queuedUpdateIndex++
       alert('This person has no more updates!')
       return
     }
+    queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
+
   } while (!selectedPeople.includes(queuedUpdate['guest-id']) && queuedUpdate.device !== 'motion sensor' && queuedUpdate.device !== 'phone')
 
-  // Update the visualization with the next action
-  updateVisualization()
+  // Rewind to the previous queued update
+  gotoUpdate(queuedUpdateIndex)
 }
 
 // Function to goto a specific action
@@ -569,6 +564,11 @@ function gotoUpdate (actionNumber) {
   // Restart the visualizer
   queuedUpdateIndex = -1
   startVisualizer(visualizationArea.dataSet)
+
+  if (actionNumber === 0) {
+    nextAction()
+    return
+  }
 
   // Progress through actionNumber of updates before stopping
   for (let i = 0; i < actionNumber; i++) {
