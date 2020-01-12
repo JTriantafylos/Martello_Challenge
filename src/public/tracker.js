@@ -1,4 +1,3 @@
-// TODO Checklist person
 // TODO Skip to time
 // TODO Skip to update
 // TODO 'next action' for person being tracked
@@ -325,6 +324,7 @@ const visualizationArea = {
 
   // Function to start the visualization
   setup: () => {
+    visualizationArea.canvas.innerHTML = ''
     visualizationArea.canvas.width = 785
     visualizationArea.canvas.height = 857
     visualizationArea.canvas.context = visualizationArea.canvas.getContext('2d')
@@ -519,6 +519,15 @@ function nextAction () {
   }
 }
 
+// Function to goto a specific action
+function gotoAction (actionNumber) {
+  queuedUpdateIndex = 0
+
+  for (let i = 0; i < actionNumber; i++) {
+    nextAction()
+  }
+}
+
 function selectPerson () {
   // Update the selected people based on the checked checkboxes
   const checkboxesArray = Array.prototype.slice.call(document.getElementsByName('personSelect'))
@@ -527,8 +536,6 @@ function selectPerson () {
   }).map((element) => {
     return element.value
   })
-
-  console.log(selectedPeople)
 
   updateVisualization()
 }
