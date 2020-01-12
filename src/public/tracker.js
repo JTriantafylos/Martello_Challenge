@@ -475,10 +475,10 @@ function updateVisualization () {
   drawReceivers()
 
   // Update display info
-  document.getElementById('updateCounter').textContent = 'Updates Displayed: ' + (queuedUpdateIndex + 1)
+  document.getElementById('updateCounter').textContent = 'Updates Visualized: ' + (queuedUpdateIndex + 1)
   document.getElementById('updateInfo').textContent = 'Current Event: ' + queuedUpdate.event + ' | ' + queuedUpdate['device-id'] + ' | ' + queuedUpdate['guest-id']
   currentTime = queuedUpdate.time
-  document.getElementById('currentTime').textContent = 'Current Time: ' + new Date(parseInt(queuedUpdate.time * 1000)).toLocaleTimeString()
+  document.getElementById('currentTime').textContent = 'Current Time: ' + new Date(parseInt(queuedUpdate.time * 1000)).toLocaleString()
 }
 
 // Function to visualize the next action in the dataset
@@ -507,13 +507,14 @@ function nextFollowedAction () {
   // Advance to the next queued update
   do {
     queuedUpdateIndex++
-    queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
-
     // Check if the user is attemping to access an update that does not exist
-    if (queuedUpdateIndex > Object.keys(dataSet).length || queuedUpdateIndex < -1) {
+    if (queuedUpdateIndex >= Object.keys(dataSet).length || queuedUpdateIndex < -1) {
+      queuedUpdateIndex--
       alert('This person has no more updates!')
       return
     }
+    queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
+
   } while (!selectedPeople.includes(queuedUpdate['guest-id']) && queuedUpdate.device !== 'motion sensor' && queuedUpdate.device !== 'phone')
 
   // Update the visualization with the next action
@@ -532,11 +533,7 @@ function prevAction () {
   }
 
   // Rewind to the previous queued update
-  queuedUpdateIndex--
-  queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
-
-  // Update the visualization with the next action
-  updateVisualization()
+  gotoUpdate(queuedUpdateIndex)
 }
 
 // Function to visualize the previous action in the dataset that involves a followed person
@@ -546,17 +543,18 @@ function prevFollowedAction () {
   // Rewind to the previous queued update
   do {
     queuedUpdateIndex--
-    queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
-
     // Check if the user is attemping to access an update that does not exist
     if (queuedUpdateIndex >= Object.keys(dataSet).length || queuedUpdateIndex < 0) {
+      queuedUpdateIndex++
       alert('This person has no more updates!')
       return
     }
+    queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
+
   } while (!selectedPeople.includes(queuedUpdate['guest-id']) && queuedUpdate.device !== 'motion sensor' && queuedUpdate.device !== 'phone')
 
-  // Update the visualization with the next action
-  updateVisualization()
+  // Rewind to the previous queued update
+  gotoUpdate(queuedUpdateIndex)
 }
 
 // Function to goto a specific action
@@ -572,6 +570,11 @@ function gotoUpdate (actionNumber) {
   // Restart the visualizer
   queuedUpdateIndex = -1
   startVisualizer(visualizationArea.dataSet)
+
+  if (actionNumber === 0) {
+    nextAction()
+    return
+  }
 
   // Progress through actionNumber of updates before stopping
   for (let i = 0; i < actionNumber; i++) {
