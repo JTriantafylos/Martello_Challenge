@@ -1,5 +1,4 @@
 // TODO speed
-// TODO Skip to time
 // TODO graph activity
 // TODO Average distance from room
 // TODO tool tips  - last connected
