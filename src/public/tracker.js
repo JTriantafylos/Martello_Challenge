@@ -222,12 +222,9 @@ function startVisualizer (dataSet) {
 
   doors.conference = new Door('110', Colours.BROWN, [258, 160], false)
   doors.conference.rotate()
-  // doors.dining = new Door('105', [270, 320], false, Colours.BROWN)
   doors.kitchen = new Door('130', Colours.BROWN, [258, 400], false)
   doors.kitchen.rotate()
   doors.gym = new Door('151', Colours.BROWN, [503, 246], false)
-  // doors.mens_washroom = new Door('152', [484, 324], false, Colours.BROWN)
-  // doors.womens_washroom = new Door('154', [562, 324], false, Colours.BROWN)
   doors.reception = new Door('101', Colours.BROWN, [463, 119], false)
   doors.reception.rotate()
   doors.pool = new Door('155', Colours.BROWN, [620, 246], false)
@@ -328,7 +325,7 @@ const visualizationArea = {
   play: () => {
     if (visualizationArea.paused) {
       visualizationArea.paused = false
-      visualizationArea.canvas.interval = setInterval(() => nextAction(), 500)
+      visualizationArea.canvas.interval = setInterval(() => nextAction(), 250)
     }
   },
   // Function to pause the visualization
