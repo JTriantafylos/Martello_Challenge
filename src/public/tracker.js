@@ -1,10 +1,10 @@
-//TODO Checklist person
-//TODO Skip to time
-//TODO Skip to update
-//TODO 'next action' for person being tracked
-//TODO motion sensors
-//TODO graph activity
-//TODO Average distance from room
+// TODO Checklist person
+// TODO Skip to time
+// TODO Skip to update
+// TODO 'next action' for person being tracked
+// TODO motion sensors
+// TODO graph activity
+// TODO Average distance from room
 
 // The person selected to be followed
 const select = document.getElementById('personSelect')
@@ -436,9 +436,7 @@ function updateVisualization () {
       })[0]
 
       if (queuedUpdateReceiver !== undefined && queuedUpdatePerson !== undefined) {
-        
-          queuedUpdatePerson.setConnection(queuedUpdateReceiver)
-        
+        queuedUpdatePerson.setConnection(queuedUpdateReceiver)
       }
     }
   } else if (queuedUpdate.device === receiverType.M_SENSOR) {
