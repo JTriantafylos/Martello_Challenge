@@ -500,7 +500,7 @@ function nextAction () {
   updateVisualization()
 }
 
-// Function to visualize the next action in the dataset
+// Function to visualize the next action in the dataset that involves a followed person
 function nextFollowedAction () {
   const dataSet = visualizationArea.dataSet
 
@@ -511,6 +511,45 @@ function nextFollowedAction () {
 
     // Check if the user is attemping to access an update that does not exist
     if (queuedUpdateIndex >= Object.keys(dataSet).length || queuedUpdateIndex < -1) {
+      alert('This person has no more updates!')
+      return
+    }
+  } while (!selectedPeople.includes(queuedUpdate['guest-id']) && queuedUpdate.device !== 'motion sensor' && queuedUpdate.device !== 'phone')
+
+  // Update the visualization with the next action
+  updateVisualization()
+}
+
+// Function to visualize the previous action in the dataset
+function prevAction () {
+  const dataSet = visualizationArea.dataSet
+
+  // Check if the user is attemping to access an update that does not exist
+  if (queuedUpdateIndex >= Object.keys(dataSet).length || queuedUpdateIndex < 0) {
+    console.log(queuedUpdateIndex)
+    alert('This is the end of the updates!')
+    return
+  }
+
+  // Rewind to the previous queued update
+  queuedUpdateIndex--
+  queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
+
+  // Update the visualization with the next action
+  updateVisualization()
+}
+
+// Function to visualize the previous action in the dataset that involves a followed person
+function prevFollowedAction () {
+  const dataSet = visualizationArea.dataSet
+
+  // Rewind to the previous queued update
+  do {
+    queuedUpdateIndex--
+    queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
+
+    // Check if the user is attemping to access an update that does not exist
+    if (queuedUpdateIndex >= Object.keys(dataSet).length || queuedUpdateIndex < 0) {
       alert('This person has no more updates!')
       return
     }
@@ -585,6 +624,8 @@ function selectPerson () {
 // HTML element event listeners
 document.getElementById('play').addEventListener('click', visualizationArea.play)
 document.getElementById('pause').addEventListener('click', visualizationArea.pause)
+document.getElementById('prev').addEventListener('click', prevAction)
+document.getElementById('prevFollowed').addEventListener('click', prevFollowedAction)
 document.getElementById('next').addEventListener('click', nextAction)
 document.getElementById('nextFollowed').addEventListener('click', nextFollowedAction)
 document.getElementById('gotoUpdateSubmit').addEventListener('click', () => gotoUpdate(document.getElementById('gotoUpdateInput').value))
