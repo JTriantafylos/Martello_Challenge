@@ -1,6 +1,5 @@
 // TODO speed
 // TODO Skip to time
-// TODO Skip to update
 // TODO 'next action' for person being tracked
 // TODO graph activity
 // TODO Average distance from room
@@ -455,11 +454,11 @@ function updateVisualization () {
     const queuedUpdatePerson = Object.values(people).filter(person => {
       return person.getName() === queuedUpdate['guest-id']
     })[0]
-
-    if (queuedUpdateDoor !== undefined && queuedUpdatePerson !== undefined) {
+    console.log(queuedUpdateDoor)
+    if (queuedUpdateDoor !== undefined) {
       var itt = 0
       selectedPeople.forEach(selectedPerson => {
-        if (queuedUpdatePerson.getName() === selectedPerson) {
+        if (queuedUpdatePerson !== undefined && queuedUpdatePerson.getName() === selectedPerson) {
           queuedUpdateDoor.setColour(queuedUpdatePerson.getColour())
           queuedUpdateDoor.toggle()
           itt++
