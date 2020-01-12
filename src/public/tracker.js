@@ -525,7 +525,7 @@ function gotoUpdate (actionNumber) {
   const dataSet = visualizationArea.dataSet
 
   // Check if the user is attemping to access an update that does not exist
-  if (actionNumber >= Object.keys(dataSet).length || actionNumber < 1) {
+  if (actionNumber >= Object.keys(dataSet).length || actionNumber < 0) {
     alert('There is no update of that number! Please enter a valid number.')
     return
   }
