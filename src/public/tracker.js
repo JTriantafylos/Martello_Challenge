@@ -88,6 +88,8 @@ const receiverID = {
 class Receiver {
   constructor (name, region, position, colour, type, floor, active) {
     this.name = name
+    this.height = 15
+    this.width = 15
     this.region = region
     this.position = position
     this.colour = colour
@@ -100,8 +102,24 @@ class Receiver {
     this.colour = col
   }
 
+  getColour () {
+    return this.colour
+  }
+
   toggle () {
     this.active = !(this.active)
+  }
+
+  getPosition () {
+    return this.position
+  }
+
+  getSize () {
+    return [this.width, this.height]
+  }
+
+  getActive () {
+    return this.active
   }
 }
 
@@ -112,6 +130,7 @@ class Person {
     this.room = room
     this.position = position
     this.colour = colour
+    this.connection = 'n/a'
   }
 
   getName () {
@@ -136,6 +155,14 @@ class Person {
 
   updatePosition (newP) {
     this.position = newP
+  }
+
+  getConnection () {
+    return this.connection
+  }
+
+  setConnection (con) {
+    this.connection = con
   }
 }
 
@@ -327,6 +354,23 @@ function drawDoors () {
   })
 }
 
+function drawReceivers () {
+  const cont = visualizationArea.canvas.context
+
+  // cont.fillRect(0,0,100,100);
+  const trackedPerson = Object.values(people).filter(person => {
+    return person.name === tracking
+  })[0]
+  Object.keys(receivers).forEach(element => {
+    if (receivers[element] === trackedPerson.getConnection()) {
+      const pos = receivers[element].getPosition()
+      const size = receivers[element].getSize()
+      cont.fillStyle = trackedPerson.getColour()
+      cont.fillRect(pos[0], pos[1], size[0], size[1])
+    }
+  })
+}
+
 // Function to check if a visualization update is required
 function checkUpdate (dataSet) {
   // Calculate the amount of seconds the visualization is through the dataset timeline
@@ -378,15 +422,29 @@ function updateVisualization () {
       }
     }
   } else {
-    // Update the receiver state
-    const queuedUpdateReceiver = Object.values(receivers).filter(receiver => {
-      return receiver.name === queuedUpdate['device-id']
-    })[0]
-    if (queuedUpdateReceiver === undefined) { console.error('UNDEFINED!') }
+    if (queuedUpdate.event !== 'user disconnected') {
+      // Update the receiver state
+      const queuedUpdateReceiver = Object.values(receivers).filter(receiver => {
+        return receiver.name === queuedUpdate['device-id']
+      })[0]
+
+      const queuedUpdatePerson = Object.values(people).filter(person => {
+        return person.name === queuedUpdate['guest-id']
+      })[0]
+
+      if (queuedUpdateReceiver !== undefined) {
+        if (queuedUpdatePerson !== undefined && queuedUpdatePerson.getName() === tracking) {
+          queuedUpdatePerson.setConnection(queuedUpdateReceiver)
+        }
+      }
+    }
   }
 
   // Draw the doors to the canvas
   drawDoors()
+
+  // Draw receivers to the canvas
+  drawReceivers()
 
   document.getElementById('updateCounter').textContent = 'Updates displayed: ' + (queuedUpdateIndex + 1)
   document.getElementById('updateInfo').textContent = 'Update Info: ' + queuedUpdate.event + '|' + queuedUpdate['device-id'] + '|' + queuedUpdate['guest-id']
