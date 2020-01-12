@@ -245,7 +245,7 @@ function startVisualizer (dataSet) {
   people.jason = new Person('Jason', Colours.BLUE, [0, 0], 'guest', 241)
   people.thomas = new Person('Thomas', Colours.ORANGE, [0, 0], 'guest', 248)
   people.rob = new Person('Rob', Colours.TURQUOISE, [0, 0], 'guest', 231)
-  people.kristina = new Person('Kristina',Colours.BLACK, [0, 0], 'guest', 235)
+  people.kristina = new Person('Kristina', Colours.BLACK, [0, 0], 'guest', 235)
 
   // initializing staff
   people.marc = new Person('Marc-Andre', Colours.VIOLET, [0, 0], 'cleaning', 0)
@@ -394,7 +394,6 @@ function checkUpdate (dataSet) {
 
 // Function to update the visualization area
 function updateVisualization () {
-
   // Clear the visualization area
   visualizationArea.clear()
 
@@ -410,7 +409,6 @@ function updateVisualization () {
 
     if (queuedUpdateDoor !== undefined) {
       if (queuedUpdatePerson !== undefined && queuedUpdatePerson.getName() === tracking) {
-        
         queuedUpdateDoor.setColour(queuedUpdatePerson.getColour())
         queuedUpdateDoor.toggle()
       } else {
@@ -418,7 +416,7 @@ function updateVisualization () {
         queuedUpdateDoor.toggle()
       }
     }
-  } else if(queuedUpdate.device === receiverType.ACCESS_P){
+  } else if (queuedUpdate.device === receiverType.ACCESS_P) {
     if (queuedUpdate.event !== 'user disconnected') {
       // Update the receiver state
       const queuedUpdateReceiver = Object.values(receivers).filter(receiver => {
@@ -435,11 +433,11 @@ function updateVisualization () {
         }
       }
     }
-  }else if(queuedUpdate.device === receiverType.M_SENSOR){
+  } else if (queuedUpdate.device === receiverType.M_SENSOR) {
     const queuedUpdateReceiver = Object.values(receivers).filter(receiver => {
-        return receiver.getName() === queuedUpdate['device-id']
-      })[0]
-     console.log(queuedUpdateReceiver)
+      return receiver.getName() === queuedUpdate['device-id']
+    })[0]
+    console.log(queuedUpdateReceiver)
   }
 
   // Draw the doors to the canvas
