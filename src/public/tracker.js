@@ -10,8 +10,8 @@ const checkboxesArray = Array.prototype.slice.call(document.getElementsByName('p
 let selectedPeople = checkboxesArray.filter((checkbox) => {
   return checkbox.checked === true
 }).map((element) => {
-    return element.value
-  })
+  return element.value
+})
 
 // Start timestamp of the dataset
 let startTimeSeconds = 1578151801
@@ -132,7 +132,7 @@ class Receiver extends Entity {
     this.region = region
     this.type = type
     this.level = level
-    this.active = false;
+    this.active = false
   }
 
   getRadius () {
@@ -150,11 +150,13 @@ class Receiver extends Entity {
   getLevel () {
     return this.level
   }
-  toggle(){
-    this.active = !(this.active);
+
+  toggle () {
+    this.active = !(this.active)
   }
-  isActive(){
-    return this.active;
+
+  isActive () {
+    return this.active
   }
 }
 
@@ -316,7 +318,7 @@ function startVisualizer (dataSet) {
 
 // Visualization area object
 const visualizationArea = {
-  canvas: document.createElement('canvas'),
+  canvas: document.getElementById('visualizationArea'),
   dataset: {},
   paused: true,
 
@@ -325,7 +327,6 @@ const visualizationArea = {
     visualizationArea.canvas.width = 785
     visualizationArea.canvas.height = 857
     visualizationArea.canvas.context = visualizationArea.canvas.getContext('2d')
-    document.body.insertBefore(visualizationArea.canvas, document.body.childNodes[0])
     drawDoors()
   },
   // Function to pause the visualization
@@ -366,18 +367,15 @@ function drawDoors () {
 }
 
 function drawReceivers () {
-  
   const cont = visualizationArea.canvas.context
-  
-  selectedPeople.forEach(selectedPerson =>{
-    
+  selectedPeople.forEach(selectedPerson => {
     const trackedPerson = Object.values(people).filter(person => {
-        return person.getName() === selectedPerson
+      return person.getName() === selectedPerson
     })[0]
-    
+
     Object.keys(receivers).forEach(element => {
-        //access points
-        if (receivers[element] === trackedPerson.getConnection()) {
+      // access points
+      if (receivers[element] === trackedPerson.getConnection()) {
         const pos = receivers[element].getPosition()
         const rad = receivers[element].getRadius()
         cont.globalAlpha = 0.5
@@ -413,11 +411,8 @@ function drawReceivers () {
             receivers[element].toggle();
 
         }
-
-        
     })
   })
-  
 }
 
 // Function to check if a visualization update is required
@@ -457,22 +452,20 @@ function updateVisualization () {
     const queuedUpdatePerson = Object.values(people).filter(person => {
       return person.getName() === queuedUpdate['guest-id']
     })[0]
-    
+
     if (queuedUpdateDoor !== undefined && queuedUpdatePerson !== undefined) {
       var itt = 0
-      selectedPeople.forEach(selectedPerson =>{
-            if(queuedUpdatePerson.getName() === selectedPerson) {
-                queuedUpdateDoor.setColour(queuedUpdatePerson.getColour())
-                queuedUpdateDoor.toggle();
-                itt++
-            }
-
+      selectedPeople.forEach(selectedPerson => {
+        if (queuedUpdatePerson.getName() === selectedPerson) {
+          queuedUpdateDoor.setColour(queuedUpdatePerson.getColour())
+          queuedUpdateDoor.toggle()
+          itt++
+        }
       })
-      if(itt === 0){
+      if (itt === 0) {
         queuedUpdateDoor.setColour(Colours.BROWN)
-        queuedUpdateDoor.toggle();
+        queuedUpdateDoor.toggle()
       }
-      
     }
   } else if (queuedUpdate.device === receiverType.ACCESS_P) {
     if (queuedUpdate.event !== 'user disconnected') {
