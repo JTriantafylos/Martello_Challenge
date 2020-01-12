@@ -13,20 +13,8 @@ let selectedPeople = checkboxesArray.filter((checkbox) => {
   return element.value
 })
 
-// Start timestamp of the dataset
-let startTimeSeconds = 1578151801
-
-// End timestamp of the dataset
-const endTimeSeconds = 1578236760
-
-// Number of seconds into the dataset since startTime
-let dataTimeElapsedSeconds = 0
-
 // The next updated queued to be visualized
 let queuedUpdate
-
-// Number of seconds since epoch until the timestamp of the next queued update
-let queuedUpdateTimeSeconds
 
 // The index of the currently queued updated within the dataset
 let queuedUpdateIndex = -1
@@ -219,19 +207,17 @@ class Door extends Entity {
 requestDataSet((dataSet) => {
   dataSet = JSON.parse(dataSet)
   queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
-  queuedUpdateTimeSeconds = parseInt(Object.keys(dataSet)[queuedUpdateIndex])
-  startTimeSeconds = parseInt(Object.keys(dataSet)[queuedUpdateIndex])
   startVisualizer(dataSet)
 })
 
-function startVisualizer (dataSet) { 
-  //resetting global arrays
+function startVisualizer (dataSet) {
+  // resetting global arrays
   doors = {}
   people = {}
   receivers = {}
 
   // initializing first floor doors
- 
+
   doors.conference = new Door('110', Colours.BROWN, [258, 160], false)
   doors.conference.rotate()
   // doors.dining = new Door('105', [270, 320], false, Colours.BROWN)
@@ -413,31 +399,9 @@ function drawReceivers () {
                 receivers[element].toggle();
             }
         }
+      
     })
   })
-}
-
-// Function to check if a visualization update is required
-function checkUpdate (dataSet) {
-  // Calculate the amount of seconds the visualization is through the dataset timeline
-  const dataTimeCurrentSeconds = startTimeSeconds + dataTimeElapsedSeconds
-
-  // Check if the last update has visualized
-  if (dataTimeCurrentSeconds > endTimeSeconds) {
-    visualizationArea.stop()
-  }
-
-  // Check if it is time for the queued update to be taken
-  if (queuedUpdateTimeSeconds === dataTimeCurrentSeconds) {
-    updateVisualization()
-    // Populate the queued update with the next update from the dataset
-    queuedUpdateIndex++
-    queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
-    queuedUpdateTimeSeconds = parseInt(Object.keys(dataSet)[queuedUpdateIndex])
-  }
-
-  // Increase the elapsed seconds counter by 1
-  dataTimeElapsedSeconds++
 }
 
 // Function to update the visualization area
@@ -510,6 +474,7 @@ function updateVisualization () {
   // Draw receivers to the canvas
   drawReceivers()
 
+  // Update display info
   document.getElementById('updateCounter').textContent = 'Updates Displayed: ' + (queuedUpdateIndex + 1)
   document.getElementById('updateInfo').textContent = 'Update Info: ' + queuedUpdate.event + '|' + queuedUpdate['device-id'] + '|' + queuedUpdate['guest-id']
   document.getElementById('currentTime').textContent = 'Current Time: ' + new Date(parseInt(queuedUpdate.time * 1000)).toLocaleTimeString()
@@ -523,8 +488,25 @@ function nextAction () {
     // Advance to the next queued update
     queuedUpdateIndex++
     queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
-    queuedUpdateTimeSeconds = parseInt(Object.keys(dataSet)[queuedUpdateIndex])
-    startTimeSeconds = parseInt(Object.keys(dataSet)[queuedUpdateIndex])
+
+    // Update the visualization with the next action
+    updateVisualization()
+  }
+}
+
+// Function to visualize the next action in the dataset
+function nextFollowedAction () {
+  const dataSet = visualizationArea.dataSet
+
+  if (queuedUpdateIndex < Object.keys(dataSet).length - 1) {
+    queuedUpdateIndex++
+    queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
+
+    // Advance to the next queued update
+    while (!selectedPeople.includes(queuedUpdate['guest-id'])) {
+      queuedUpdateIndex++
+      queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
+    }
 
     // Update the visualization with the next action
     updateVisualization()
@@ -552,13 +534,16 @@ function selectPerson () {
     return element.value
   })
 
-  gotoAction(queuedUpdateIndex+1)
+  gotoAction(queuedUpdateIndex + 1)
 }
 
 // HTML element event listeners
 document.getElementById('play').addEventListener('click', visualizationArea.play)
 document.getElementById('pause').addEventListener('click', visualizationArea.pause)
 document.getElementById('next').addEventListener('click', nextAction)
+document.getElementById('nextFollowed').addEventListener('click', nextFollowedAction)
+document.getElementById('gotoActionSubmit').addEventListener('click', () => gotoAction(document.getElementById('gotoActionInput').value))
+
 const personSelectCheckboxes = document.getElementsByName('personSelect')
 personSelectCheckboxes.forEach((checkbox) => {
   checkbox.addEventListener('change', selectPerson)

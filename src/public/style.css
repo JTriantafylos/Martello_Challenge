@@ -1,3 +1,8 @@
+body {
+	font-family: 'Nanum Gothic', sans-serif;
+	color: #282828;
+}
+
 canvas {
 	background-image: url("./floor_plan.jpg");
 	border:1px solid #d3d3d3;
