@@ -92,6 +92,7 @@ const receiverID = {
   MS2: 'elevator',
   MS3: 'ice machine'
 }
+
 class Entity {
   constructor (name, colour, position) {
     this.name = name
@@ -119,6 +120,7 @@ class Entity {
     this.position = pos
   }
 }
+
 class Receiver extends Entity {
   constructor (name, colour, position, region, type, level) {
     super(name, colour, position)
@@ -209,12 +211,6 @@ class Door extends Entity {
     return [this.width, this.height]
   }
 }
-
-requestDataSet((dataSet) => {
-  dataSet = JSON.parse(dataSet)
-  queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
-  startVisualizer(dataSet)
-})
 
 function startVisualizer (dataSet) {
   // resetting global arrays
@@ -456,7 +452,7 @@ function updateVisualization () {
     const queuedUpdateReceiver = Object.values(receivers).filter(receiver => {
       return receiver.getName() === queuedUpdate['device-id']
     })[0]
-    if (queuedUpdateReceiver != undefined) {
+    if (queuedUpdateReceiver !== undefined) {
       queuedUpdateReceiver.toggle()
     } else {
       console.log('undefined sensor')
@@ -489,42 +485,56 @@ function updateVisualization () {
 function nextAction () {
   const dataSet = visualizationArea.dataSet
 
-  if (queuedUpdateIndex < Object.keys(dataSet).length - 1) {
-    // Advance to the next queued update
-    queuedUpdateIndex++
-    queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
-
-    // Update the visualization with the next action
-    updateVisualization()
+  // Check if the user is attemping to access an update that does not exist
+  if (queuedUpdateIndex >= Object.keys(dataSet).length || queuedUpdateIndex < -1) {
+    console.log(queuedUpdateIndex)
+    alert('This is the end of the updates!')
+    return
   }
+
+  // Advance to the next queued update
+  queuedUpdateIndex++
+  queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
+
+  // Update the visualization with the next action
+  updateVisualization()
 }
 
 // Function to visualize the next action in the dataset
 function nextFollowedAction () {
   const dataSet = visualizationArea.dataSet
 
-  if (queuedUpdateIndex < Object.keys(dataSet).length - 1) {
+  // Advance to the next queued update
+  do {
     queuedUpdateIndex++
     queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
 
-    // Advance to the next queued update
-    while (!selectedPeople.includes(queuedUpdate['guest-id'])) {
-      queuedUpdateIndex++
-      queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
+    // Check if the user is attemping to access an update that does not exist
+    if (queuedUpdateIndex >= Object.keys(dataSet).length || queuedUpdateIndex < -1) {
+      alert('This person has no more updates!')
+      return
     }
+  } while (!selectedPeople.includes(queuedUpdate['guest-id']) && queuedUpdate.device !== 'motion sensor' && queuedUpdate.device !== 'phone')
 
-    // Update the visualization with the next action
-    updateVisualization()
-  }
+  // Update the visualization with the next action
+  updateVisualization()
 }
 
 // Function to goto a specific action
 function gotoUpdate (actionNumber) {
-  document.getElementById('gotoUpdateInput').value = ''
+  const dataSet = visualizationArea.dataSet
 
+  // Check if the user is attemping to access an update that does not exist
+  if (actionNumber >= Object.keys(dataSet).length || actionNumber < 1) {
+    alert('There is no update of that number! Please enter a valid number.')
+    return
+  }
+
+  // Restart the visualizer
   queuedUpdateIndex = -1
   startVisualizer(visualizationArea.dataSet)
 
+  // Progress through actionNumber of updates before stopping
   for (let i = 0; i < actionNumber; i++) {
     nextAction()
   }
@@ -559,6 +569,7 @@ function advanceTime () {
   gotoUpdate(updateIndex + 2)
 }
 
+// Click handler function when a person's checkbox is selected
 function selectPerson () {
   // Update the selected people based on the checked checkboxes
   const checkboxesArray = Array.prototype.slice.call(document.getElementsByName('personSelect'))
@@ -578,95 +589,98 @@ document.getElementById('next').addEventListener('click', nextAction)
 document.getElementById('nextFollowed').addEventListener('click', nextFollowedAction)
 document.getElementById('gotoUpdateSubmit').addEventListener('click', () => gotoUpdate(document.getElementById('gotoUpdateInput').value))
 document.getElementById('advanceTimeSubmit').addEventListener('click', () => advanceTime())
-
 const personSelectCheckboxes = document.getElementsByName('personSelect')
 personSelectCheckboxes.forEach((checkbox) => {
   checkbox.addEventListener('change', selectPerson)
 })
 
-function mouseTracker(e){
-  var x = e.clientX;
-  var y = e.clientY;
+function mouseTracker (e) {
+  var x = e.clientX
+  var y = e.clientY
   document.getElementById('connectionsLS').innerHTML = ''
-  if(x > 176 && y > 159 && x < 230 && y < 207){
-      
-      selectedPeople.forEach(selectedPerson => {
-        const trackedPerson = Object.values(people).filter(person => {
-            return person.getName() === selectedPerson
-        })[0]
-          if(trackedPerson.getConnection()[0] !== 'none' && trackedPerson.getConnection()[0].getName() === receiverID.AP1_1){
-              let listItem = document.createElement('li')
-              listItem.textContent = trackedPerson.getName() +' connected to ' + receiverID.AP1_1+ ' at '+ new Date(parseInt(trackedPerson.getConnection()[1] * 1000)).toLocaleTimeString()
-              document.getElementById('connectionsLS').appendChild(listItem)
-          }
-      })
-
-  }else if(x >342 && y > 163 && x < 400 && y < 219){
-      selectedPeople.forEach(selectedPerson => {
-        const trackedPerson = Object.values(people).filter(person => {
-            return person.getName() === selectedPerson
-        })[0]
-          if(trackedPerson.getConnection()[0] !== 'none' && trackedPerson.getConnection()[0].getName() === receiverID.AP1_4){
-            let listItem = document.createElement('li')
-            listItem.textContent = trackedPerson.getName() +' connected to ' + receiverID.AP1_4+ ' at '+ new Date(parseInt(trackedPerson.getConnection()[1] * 1000)).toLocaleTimeString()
-            document.getElementById('connectionsLS').appendChild(listItem)
-          }
-      })
-  }else if(x > 562 && y > 275 && x < 616 && y < 321){
-      selectedPeople.forEach(selectedPerson => {
-        const trackedPerson = Object.values(people).filter(person => {
-            return person.getName() === selectedPerson
-        })[0]
-          if(trackedPerson.getConnection()[0] !== 'none' && trackedPerson.getConnection()[0].getName() === receiverID.AP1_2){
-            let listItem = document.createElement('li')
-            listItem.textContent = trackedPerson.getName() +' connected to ' + receiverID.AP1_2+ ' at '+ new Date(parseInt(trackedPerson.getConnection()[1] * 1000)).toLocaleTimeString()
-            document.getElementById('connectionsLS').appendChild(listItem)
-          }
-      })
-  }else if(x > 340 && y > 388 && x < 400 && y < 451){
-      selectedPeople.forEach(selectedPerson => {
-        const trackedPerson = Object.values(people).filter(person => {
-            return person.getName() === selectedPerson
-        })[0]
-          if(trackedPerson.getConnection()[0] !== 'none' && trackedPerson.getConnection()[0].getName() === receiverID.AP1_3){
-            let listItem = document.createElement('li')
-            listItem.textContent = trackedPerson.getName() +' connected to ' + receiverID.AP1_3+ ' at '+ new Date(parseInt(trackedPerson.getConnection()[1] * 1000)).toLocaleTimeString()
-            document.getElementById('connectionsLS').appendChild(listItem)
-          }
-      })
-  }else if(x > 248 && y > 647 && x < 300 && y < 702){
-      selectedPeople.forEach(selectedPerson => {
-        const trackedPerson = Object.values(people).filter(person => {
-            return person.getName() === selectedPerson
-        })[0]
-          if(trackedPerson.getConnection()[0] !== 'none' && trackedPerson.getConnection()[0].getName() === receiverID.AP2_1){
-            let listItem = document.createElement('li')
-            listItem.textContent = trackedPerson.getName() +' connected to ' + receiverID.AP2_1+ ' at '+ new Date(parseInt(trackedPerson.getConnection()[1] * 1000)).toLocaleTimeString()
-            document.getElementById('connectionsLS').appendChild(listItem)
-          }
-      })
-  }else if(x > 442 && y > 647 && x < 492 && y < 702){
+  if (x > 176 && y > 159 && x < 230 && y < 207) {
     selectedPeople.forEach(selectedPerson => {
-        const trackedPerson = Object.values(people).filter(person => {
-            return person.getName() === selectedPerson
-        })[0]
-          if(trackedPerson.getConnection()[0] !== 'none' && trackedPerson.getConnection()[0].getName() === receiverID.AP2_3){
-            let listItem = document.createElement('li')
-            listItem.textContent = trackedPerson.getName() +' connected to ' + receiverID.AP2_3+ ' at '+ new Date(parseInt(trackedPerson.getConnection()[1] * 1000)).toLocaleTimeString()
-            document.getElementById('connectionsLS').appendChild(listItem)
-          }
-      })
-  }else if(x > 571 && y > 647 && x < 630 && y < 702){
-        selectedPeople.forEach(selectedPerson => {
-            const trackedPerson = Object.values(people).filter(person => {
-                return person.getName() === selectedPerson
-            })[0]
-              if(trackedPerson.getConnection()[0] !== 'none' && trackedPerson.getConnection()[0].getName() === receiverID.AP2_2){
-                let listItem = document.createElement('li')
-                listItem.textContent = trackedPerson.getName() +' connected to ' + receiverID.AP2_2+ ' at '+ new Date(parseInt(trackedPerson.getConnection()[1] * 1000)).toLocaleTimeString()
-                document.getElementById('connectionsLS').appendChild(listItem)
-              }
-          })
+      const trackedPerson = Object.values(people).filter(person => {
+        return person.getName() === selectedPerson
+      })[0]
+      if (trackedPerson.getConnection()[0] !== 'none' && trackedPerson.getConnection()[0].getName() === receiverID.AP1_1) {
+        const listItem = document.createElement('li')
+        listItem.textContent = trackedPerson.getName() + ' connected to ' + receiverID.AP1_1 + ' at ' + new Date(parseInt(trackedPerson.getConnection()[1] * 1000)).toLocaleTimeString()
+        document.getElementById('connectionsLS').appendChild(listItem)
+      }
+    })
+  } else if (x > 342 && y > 163 && x < 400 && y < 219) {
+    selectedPeople.forEach(selectedPerson => {
+      const trackedPerson = Object.values(people).filter(person => {
+        return person.getName() === selectedPerson
+      })[0]
+      if (trackedPerson.getConnection()[0] !== 'none' && trackedPerson.getConnection()[0].getName() === receiverID.AP1_4) {
+        const listItem = document.createElement('li')
+        listItem.textContent = trackedPerson.getName() + ' connected to ' + receiverID.AP1_4 + ' at ' + new Date(parseInt(trackedPerson.getConnection()[1] * 1000)).toLocaleTimeString()
+        document.getElementById('connectionsLS').appendChild(listItem)
+      }
+    })
+  } else if (x > 562 && y > 275 && x < 616 && y < 321) {
+    selectedPeople.forEach(selectedPerson => {
+      const trackedPerson = Object.values(people).filter(person => {
+        return person.getName() === selectedPerson
+      })[0]
+      if (trackedPerson.getConnection()[0] !== 'none' && trackedPerson.getConnection()[0].getName() === receiverID.AP1_2) {
+        const listItem = document.createElement('li')
+        listItem.textContent = trackedPerson.getName() + ' connected to ' + receiverID.AP1_2 + ' at ' + new Date(parseInt(trackedPerson.getConnection()[1] * 1000)).toLocaleTimeString()
+        document.getElementById('connectionsLS').appendChild(listItem)
+      }
+    })
+  } else if (x > 340 && y > 388 && x < 400 && y < 451) {
+    selectedPeople.forEach(selectedPerson => {
+      const trackedPerson = Object.values(people).filter(person => {
+        return person.getName() === selectedPerson
+      })[0]
+      if (trackedPerson.getConnection()[0] !== 'none' && trackedPerson.getConnection()[0].getName() === receiverID.AP1_3) {
+        const listItem = document.createElement('li')
+        listItem.textContent = trackedPerson.getName() + ' connected to ' + receiverID.AP1_3 + ' at ' + new Date(parseInt(trackedPerson.getConnection()[1] * 1000)).toLocaleTimeString()
+        document.getElementById('connectionsLS').appendChild(listItem)
+      }
+    })
+  } else if (x > 248 && y > 647 && x < 300 && y < 702) {
+    selectedPeople.forEach(selectedPerson => {
+      const trackedPerson = Object.values(people).filter(person => {
+        return person.getName() === selectedPerson
+      })[0]
+      if (trackedPerson.getConnection()[0] !== 'none' && trackedPerson.getConnection()[0].getName() === receiverID.AP2_1) {
+        const listItem = document.createElement('li')
+        listItem.textContent = trackedPerson.getName() + ' connected to ' + receiverID.AP2_1 + ' at ' + new Date(parseInt(trackedPerson.getConnection()[1] * 1000)).toLocaleTimeString()
+        document.getElementById('connectionsLS').appendChild(listItem)
+      }
+    })
+  } else if (x > 442 && y > 647 && x < 492 && y < 702) {
+    selectedPeople.forEach(selectedPerson => {
+      const trackedPerson = Object.values(people).filter(person => {
+        return person.getName() === selectedPerson
+      })[0]
+      if (trackedPerson.getConnection()[0] !== 'none' && trackedPerson.getConnection()[0].getName() === receiverID.AP2_3) {
+        const listItem = document.createElement('li')
+        listItem.textContent = trackedPerson.getName() + ' connected to ' + receiverID.AP2_3 + ' at ' + new Date(parseInt(trackedPerson.getConnection()[1] * 1000)).toLocaleTimeString()
+        document.getElementById('connectionsLS').appendChild(listItem)
+      }
+    })
+  } else if (x > 571 && y > 647 && x < 630 && y < 702) {
+    selectedPeople.forEach(selectedPerson => {
+      const trackedPerson = Object.values(people).filter(person => {
+        return person.getName() === selectedPerson
+      })[0]
+      if (trackedPerson.getConnection()[0] !== 'none' && trackedPerson.getConnection()[0].getName() === receiverID.AP2_2) {
+        const listItem = document.createElement('li')
+        listItem.textContent = trackedPerson.getName() + ' connected to ' + receiverID.AP2_2 + ' at ' + new Date(parseInt(trackedPerson.getConnection()[1] * 1000)).toLocaleTimeString()
+        document.getElementById('connectionsLS').appendChild(listItem)
+      }
+    })
   }
-
 }
+
+// Request the dataset from the back end
+requestDataSet((dataSet) => {
+  dataSet = JSON.parse(dataSet)
+  queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
+  startVisualizer(dataSet)
+})
