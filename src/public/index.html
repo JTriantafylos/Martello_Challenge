@@ -1,17 +1,31 @@
 <!DOCTYPE html>
 <html>
-    <head>
+	<head>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 		<link rel="stylesheet" href="style.css">
-    </head>
-    <body >
-		<button id='next' >Next Action</button>
-		<button id='play' >Play</button>
-		<button id='pause' >Pause</button>
-        <h1 id='updateCounter'>Updates Displayed: 0</h1>
-        <h1 id='currentTime'>Current Time: </h1>
+	</head>
+	<body >
+		<button id='next'>Next Action</button>
+		<button id='play'>Play</button>
+		<button id='pause'>Pause</button>
+		<select id='personSelect'>
+			<option value='Veronica'>Veronica</option>
+			<option value='Jason'>Jason</option>
+			<option value='Thomas'>Thomas</option>
+			<option value='Rob'>Rob</option>
+			<option value='Kristina'>Kristina</option>
+
+			<option value='Marc-Andre'>Marc-Andre</option>
+			<option value='Dave'>Dave</option>
+			<option value='Salina'>Salina</option>
+			<option value='Harrison'>Harrison</option>
+		</select>
+
+		<h1 id='updateCounter'>Updates Displayed: 0</h1>
+		<h1 id='currentTime'>Current Time: </h1>
 		<h1 id='updateInfo'>Update Info: </h1>
-        <script src="main.js"></script>
+
+		<script src="main.js"></script>
 		<script src="tracker.js"></script>
 	</body>
 </html>
