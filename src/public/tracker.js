@@ -31,8 +31,9 @@ const receivers = {}
 const Colours = {
   RED: '#ff2915',
   BLUE: '#2925ff',
-  YELLOW: '#ffd000',
+  YELLOW: '#fff537',
   GREEN: '#14ab03',
+  TURQUOISE: '#40E0D0',
   VIOLET: '#7f25b0',
   ORANGE: '#e38f28',
   BLACK: '#000000',
@@ -238,7 +239,7 @@ function startVisualizer (dataSet) {
   people.veronica = new Person('Veronica', Colours.RED,[0, 0], 'guest', 210)
   people.jason = new Person('Jason', Colours.BLUE, [0, 0], 'guest', 241)
   people.thomas = new Person('Thomas', Colours.ORANGE, [0, 0], 'guest', 248)
-  people.rob = new Person('Rob', 'guest', Colours.YELLOW, [0, 0], 231)
+  people.rob = new Person('Rob', Colours.TURQUOISE, [0, 0], 'guest', 231)
   people.kristina = new Person('Kristina',Colours.BLACK, [0, 0], 'guest', 235)
 
   // initializing staff
@@ -283,9 +284,9 @@ function startVisualizer (dataSet) {
   receivers.hallCenterAP = new Receiver(receiverID.AP2_3, Colours.WHITE, [459, 655], 'Second Floor Center Hall', receiverType.ACCESS_P, 2)
 
   // initializing motion sensors
-  receivers.stairMS = new Receiver(receiverID.MS1, Colours.WHITE, [715, 291, 715, 662], 'Stairwell Sensor', receiverType.M_SENSOR, 1)
-  receivers.elevatorMS = new Receiver(receiverID.MS2, Colours.WHITE, [363, 291, 363, 662], 'Elevator', receiverType.M_SENSOR, 1)
-  receivers.room234MS = new Receiver(receiverID.MS3, Colours.WHITE, [363, 799], 'Ice/Vending Machines', receiverType.M_SENSOR, 2)
+  receivers.stairMS = new Receiver(receiverID.MS1, Colours.YELLOW, [715, 291, 715, 662], 'Stairwell Sensor', receiverType.M_SENSOR, 1)
+  receivers.elevatorMS = new Receiver(receiverID.MS2, Colours.YELLOW, [363, 291, 363, 662], 'Elevator', receiverType.M_SENSOR, 1)
+  receivers.room234MS = new Receiver(receiverID.MS3, Colours.YELLOW, [363, 799], 'Ice/Vending Machines', receiverType.M_SENSOR, 2)
 
   visualizationArea.dataSet = dataSet
   visualizationArea.setup()
@@ -388,7 +389,6 @@ function checkUpdate (dataSet) {
 
 // Function to update the visualization area
 function updateVisualization () {
-  console.log(queuedUpdate)
 
   // Clear the visualization area
   visualizationArea.clear()
@@ -405,7 +405,7 @@ function updateVisualization () {
 
     if (queuedUpdateDoor !== undefined) {
       if (queuedUpdatePerson !== undefined && queuedUpdatePerson.getName() === tracking) {
-        console.log(queuedUpdate)
+        
         queuedUpdateDoor.setColour(queuedUpdatePerson.getColour())
         queuedUpdateDoor.toggle()
       } else {
@@ -413,7 +413,7 @@ function updateVisualization () {
         queuedUpdateDoor.toggle()
       }
     }
-  } else {
+  } else if(queuedUpdate.device === receiverType.ACCESS_P){
     if (queuedUpdate.event !== 'user disconnected') {
       // Update the receiver state
       const queuedUpdateReceiver = Object.values(receivers).filter(receiver => {
@@ -430,6 +430,11 @@ function updateVisualization () {
         }
       }
     }
+  }else if(queuedUpdate.device === receiverType.M_SENSOR){
+    const queuedUpdateReceiver = Object.values(receivers).filter(receiver => {
+        return receiver.getName() === queuedUpdate['device-id']
+      })[0]
+     console.log(queuedUpdateReceiver)
   }
 
   // Draw the doors to the canvas
