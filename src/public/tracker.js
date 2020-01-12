@@ -10,7 +10,9 @@
 const checkboxesArray = Array.prototype.slice.call(document.getElementsByName('personSelect'))
 let selectedPeople = checkboxesArray.filter((checkbox) => {
   return checkbox.checked === true
-})
+}).map((element) => {
+    return element.value
+  })
 
 // Start timestamp of the dataset
 let startTimeSeconds = 1578151801
@@ -127,16 +129,15 @@ class Entity {
 class Receiver extends Entity {
   constructor (name, colour, position, region, type, level) {
     super(name, colour, position)
-    this.height = 15
-    this.width = 15
+    this.radius = 32
     this.region = region
     this.type = type
     this.level = level
     this.active = false;
   }
 
-  getSize () {
-    return [this.width, this.height]
+  getRadius () {
+    return this.radius
   }
 
   getRegion () {
@@ -366,24 +367,25 @@ function drawDoors () {
 }
 
 function drawReceivers () {
+  
   const cont = visualizationArea.canvas.context
-  console.log(selectedPeople)
-  (selectedPeople).forEach(selectedPerson =>{
-    // cont.fillRect(0,0,100,100);
+  
+  selectedPeople.forEach(selectedPerson =>{
     
     const trackedPerson = Object.values(people).filter(person => {
-        return person === selectedPerson
+        return person.getName() === selectedPerson
     })[0]
     
     Object.keys(receivers).forEach(element => {
         //access points
         if (receivers[element] === trackedPerson.getConnection()) {
         const pos = receivers[element].getPosition()
+        const rad = receivers[element].getRadius()
         cont.globalAlpha = 0.5
         cont.fillStyle = trackedPerson.getColour()
         // cont.fillRect(pos[0], pos[1], 20, 20)
         cont.beginPath()
-        cont.arc(pos[0], pos[1], 64, 0, 2 * Math.PI, false)
+        cont.arc(pos[0], pos[1], rad, 0, 2 * Math.PI, false)
         cont.fill()
         }else if(receivers[element].isActive()){
             //motion sensors
@@ -454,15 +456,22 @@ function updateVisualization () {
     const queuedUpdatePerson = Object.values(people).filter(person => {
       return person.getName() === queuedUpdate['guest-id']
     })[0]
+    
+    if (queuedUpdateDoor !== undefined && queuedUpdatePerson !== undefined) {
+      var itt = 0
+      selectedPeople.forEach(selectedPerson =>{
+            if(queuedUpdatePerson.getName() === selectedPerson) {
+                queuedUpdateDoor.setColour(queuedUpdatePerson.getColour())
+                queuedUpdateDoor.toggle();
+                itt++
+            }
 
-    if (queuedUpdateDoor !== undefined) {
-      if (queuedUpdatePerson !== undefined && queuedUpdatePerson.getName() === selectedPerson) {
-        queuedUpdateDoor.setColour(queuedUpdatePerson.getColour())
-        queuedUpdateDoor.toggle()
-      } else {
+      })
+      if(itt === 0){
         queuedUpdateDoor.setColour(Colours.BROWN)
-        queuedUpdateDoor.toggle()
+        queuedUpdateDoor.toggle();
       }
+      
     }
   } else if (queuedUpdate.device === receiverType.ACCESS_P) {
     if (queuedUpdate.event !== 'user disconnected') {
