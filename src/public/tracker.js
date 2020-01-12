@@ -734,6 +734,9 @@ class AccessP{
     getAdjacentRooms(){
         return this.adjacentRooms;
     }
+    getName(){
+        return this.name;
+    }
 }
 
 //doing the prediction
@@ -767,7 +770,53 @@ function findSensor(roomNum){
 function predict(){
     let murderRoom = '210';
     let sensor = findSensor(murderRoom);
-    console.log(sensor);
-    gotoUpdate(452);
+    let inSensor = []
+    let suspects = {}
+    gotoUpdate(451);
+    Object.keys(people).forEach(person=>{
+        if((people[person]).getConnection()[0].getName() == sensor.getName()){
+            inSensor.push(people[person])
+        }
+        
+    })
+
+    //deciding longest
+    let smallest = currentTime;
+    let victim
+    for(var i = 0; i<inSensor.length; i++){
+        
+        if(inSensor[i].connection[1] < smallest){
+            victim = inSensor[i]
+            smallest = inSensor[i].connection[1]
+        }
+    }
+    //predicting victim
+    console.log(victim);
+
+    //parse through night again and look at occurrences at the sensor
+    for(var t = 0; t<451; t++){
+        gotoUpdate(t);
+        if(currentTime >= victim.connection[1]){
+            Object.keys(people).forEach(person=>{
+                if(people[person].connection[0].name === sensor.name && people[person].name != victim.name){
+                    if(!suspects[people[person].name]){
+                        suspects[people[person].name] = 1
+                    } else {
+                        suspects[people[person].name] += 1
+                    }
+                    
+                }
+                
+                
+            })
+        }
+    }
+
+    let out = 'The Victim is most likely '+ victim.name + ' and the suspects are '
+    Object.keys(suspects).forEach(element=>{
+        console.log(element)
+        out+= '\n - ' + element;
+    })
+    alert(out)
     
 }
