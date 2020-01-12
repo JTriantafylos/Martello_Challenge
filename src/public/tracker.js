@@ -159,6 +159,7 @@ class Person extends Entity {
     this.role = role
     this.room = room
     this.connection = ['none', '0']
+    this.newConnection = false
   }
 
   getRole () {
@@ -175,6 +176,9 @@ class Person extends Entity {
 
   setConnection (con) {
     this.connection = con
+  }
+  setNewConnection(newCon){
+      this.newConnection = newCon;
   }
 }
 
@@ -394,6 +398,7 @@ function drawReceivers () {
           receivers[element].toggle()
         }
       }
+      
     })
   })
 }
@@ -440,6 +445,7 @@ function updateVisualization () {
 
       if (queuedUpdateReceiver !== undefined && queuedUpdatePerson !== undefined) {
         queuedUpdatePerson.setConnection([queuedUpdateReceiver, queuedUpdate.time])
+        queuedUpdatePerson.setNewConnection(true);
       }
     }
   } else if (queuedUpdate.device === receiverType.M_SENSOR) {
@@ -487,13 +493,13 @@ function nextAction () {
     return
   }
 
-  const lastPingList = document.getElementById('lastPingList')
-  lastPingList.innerHTML = ''
-  Object.values(people).forEach((person) => {
-    const item = document.createElement('li')
-    item.textContent = person.getName() + '\'s time since last move: ' + new Date(currentTime - parseInt(person.getConnection()[1])).getTime() + ' seconds' + ' | last AP: ' + person.getConnection()[0].name
-    lastPingList.appendChild(item)
-  })
+//   const lastPingList = document.getElementById('lastPingList')
+//   lastPingList.innerHTML = ''
+//   Object.values(people).forEach((person) => {
+//     const item = document.createElement('li')
+//     item.textContent = person.getName() + '\'s time since last move: ' + new Date(currentTime - parseInt(person.getConnection()[1])).getTime() + ' seconds' + ' | last AP: ' + person.getConnection()[0].name
+//     lastPingList.appendChild(item)
+//   })
 
   // Advance to the next queued update
   queuedUpdateIndex++
@@ -733,10 +739,11 @@ requestDataSet((dataSet) => {
 
 
 class AccessP{
-    constructor(name, position, adjacentRooms) {
+    constructor(name, position, adjacentRooms, level) {
         this.name = name;
         this.position = position;
         this.adjacentRooms = adjacentRooms;
+        this.level = level
 
     }
     getAdjacentRooms(){
@@ -751,14 +758,14 @@ class AccessP{
 const accessPoints = {}
 document.getElementById('makePrediction').addEventListener('click', () => predict())
 
-accessPoints.ap1_1 = new AccessP(receiverID.AP1_1, [192, 165], [])
-accessPoints.ap1_2 = new AccessP(receiverID.AP1_2, [582, 284], ['151', '155', '152', '154', '156', '151'])
-accessPoints.ap1_3 = new AccessP(receiverID.AP1_3, [365, 408], ['kitchen'])
-accessPoints.ap1_4 = new AccessP(receiverID.AP1_4, [361, 175], ['elevator', 'conference', 'entrance', 'reception'])
+accessPoints.ap1_1 = new AccessP(receiverID.AP1_1, [192, 165], [], 1)
+accessPoints.ap1_2 = new AccessP(receiverID.AP1_2, [582, 284], ['151', '155', '152', '154', '156', '151'], 1)
+accessPoints.ap1_3 = new AccessP(receiverID.AP1_3, [365, 408], ['kitchen'], 1)
+accessPoints.ap1_4 = new AccessP(receiverID.AP1_4, [361, 175], ['elevator', 'conference', 'entrance', 'reception'], 1)
 
-accessPoints.ap2_1 = new AccessP(receiverID.AP2_1, [268, 655], ['210', '231', '220', '232'])
-accessPoints.ap2_2 = new AccessP(receiverID.AP2_2, [588, 655], ['235', '236'])
-accessPoints.ap2_3 = new AccessP(receiverID.AP2_3, [459, 655], ['241', '244', '247', '248'])
+accessPoints.ap2_1 = new AccessP(receiverID.AP2_1, [268, 655], ['210', '231', '220', '232'], 2)
+accessPoints.ap2_2 = new AccessP(receiverID.AP2_2, [588, 655], ['235', '236'], 2)
+accessPoints.ap2_3 = new AccessP(receiverID.AP2_3, [459, 655], ['241', '244', '247', '248'], 2)
 
 function findSensor (roomNum) {
   let ret
@@ -775,7 +782,9 @@ function predict(){
     let murderRoom = '210';
     let sensor = findSensor(murderRoom);
     let inSensor = []
-    let suspects = {}
+    let suspectsSensor = {}
+    let suspectsIrregular = {}
+
     gotoUpdate(451);
     Object.keys(people).forEach(person=>{
         if((people[person]).getConnection()[0].getName() == sensor.getName()){
@@ -785,7 +794,7 @@ function predict(){
     })
 
     //deciding longest
-    let smallest = currentTime;
+    let smallest = queuedUpdate.time;
     let victim
     for(var i = 0; i<inSensor.length; i++){
         
@@ -794,19 +803,34 @@ function predict(){
             smallest = inSensor[i].connection[1]
         }
     }
-    //predicting victim
-    console.log(victim);
+    
 
     //parse through night again and look at occurrences at the sensor
     for(var t = 0; t<451; t++){
         gotoUpdate(t);
-        if(currentTime >= victim.connection[1]){
+        if(parseInt(queuedUpdate.time) >= victim.connection[1]){
+            
+            if( parseInt(queuedUpdate.time) >= 1578200400 && parseInt(queuedUpdate.time) <=1578218400){
+                Object.keys(people).forEach(person=>{
+                    if(people[person].newConnection===true && people[person].name != victim.name){
+                        if(!suspectsIrregular[people[person].name]){
+                            suspectsIrregular[people[person].name] = 1
+                        } else {
+                            suspectsIrregular[people[person].name] += 1
+                        }
+                        people[person].setNewConnection(false)
+                        
+                    }
+                    
+                    
+                })
+            }
             Object.keys(people).forEach(person=>{
                 if(people[person].connection[0].name === sensor.name && people[person].name != victim.name){
-                    if(!suspects[people[person].name]){
-                        suspects[people[person].name] = 1
+                    if(!suspectsSensor[people[person].name]){
+                        suspectsSensor[people[person].name] = 1
                     } else {
-                        suspects[people[person].name] += 1
+                        suspectsSensor[people[person].name] += 1
                     }
                     
                 }
@@ -815,12 +839,13 @@ function predict(){
             })
         }
     }
-
-    let out = 'The Victim is most likely '+ victim.name + ' and the suspects are '
-    Object.keys(suspects).forEach(element=>{
-        console.log(element)
+    //console.log(suspectsIrregular)
+    let out = 'The Victim is most likely '+ victim.name + ' and the suspectsSensor are '
+    Object.keys(suspectsSensor).forEach(element=>{
+        
         out+= '\n - ' + element;
     })
     alert(out)
+    
     
 }
