@@ -235,57 +235,57 @@ function startVisualizer (dataSet) {
   doors.stairwell_2.rotate()
 
   // initializing guests
-  people.veronica = new Person('Veronica',[0, 0], Colours.RED, 'guest', 210)
-  people.jason = new Person('Jason',[0, 0], Colours.BLUE, 'guest', 241)
-  people.thomas = new Person('Thomas', [0, 0], Colours.ORANGE, 'guest', 248)
-  people.rob = new Person('Rob', 'guest', Colours.YELLOW, 231, [0, 0])
-  people.kristina = new Person('Kristina', [0, 0], Colours.BLACK, 'guest', 235)
+  people.veronica = new Person('Veronica', Colours.RED,[0, 0], 'guest', 210)
+  people.jason = new Person('Jason', Colours.BLUE, [0, 0], 'guest', 241)
+  people.thomas = new Person('Thomas', Colours.ORANGE, [0, 0], 'guest', 248)
+  people.rob = new Person('Rob', 'guest', Colours.YELLOW, [0, 0], 231)
+  people.kristina = new Person('Kristina',Colours.BLACK, [0, 0], 'guest', 235)
 
   // initializing staff
-  people.marc = new Person('Marc-Andre', [0, 0], Colours.VIOLET, 'cleaning', 0)
-  people.dave = new Person('Dave', [0, 0], Colours.PINK, 'cooking', 0)
-  people.salina = new Person('Salina', [0, 0], Colours.GRAY, 'reception', 0)
-  people.harrison = new Person('Harrison', [0, 0], Colours.GREEN, 'reception late-night', 0)
+  people.marc = new Person('Marc-Andre', Colours.VIOLET, [0, 0], 'cleaning', 0)
+  people.dave = new Person('Dave', Colours.PINK, [0, 0], 'cooking', 0)
+  people.salina = new Person('Salina', Colours.GRAY, [0, 0], 'reception', 0)
+  people.harrison = new Person('Harrison', Colours.GREEN, [0, 0], 'reception late-night', 0)
 
   // Floor 1 phone initializing
-  receivers.frontDeskPhone = new Receiver(receiverID.PHONE_FRONT_DESK,[1, 2], Colours.WHITE, 'Reception Desk', receiverType.PHONE, 1)
-  receivers.room100Phone = new Receiver(receiverID.PHONE_100, [1, 2], Colours.WHITE, 'Front Lobby', receiverType.PHONE, 1)
-  receivers.room110Phone = new Receiver(receiverID.PHONE_110, [1, 2], Colours.WHITE, 'Conference Room', receiverType.PHONE, 1)
-  receivers.room130Phone = new Receiver(receiverID.PHONE_130, [1, 2], Colours.WHITE, 'Kitchen', receiverType.PHONE, 1)
-  receivers.room151Phone = new Receiver(receiverID.PHONE_151, [1, 2], Colours.WHITE, 'Gym', receiverType.PHONE, 1)
-  receivers.room155Phone = new Receiver(receiverID.PHONE_155, [1, 2], Colours.WHITE, 'Pool', receiverType.PHONE, 1)
-  receivers.room152Phone = new Receiver(receiverID.PHONE_152, [1, 2], Colours.WHITE, 'Mens Washroom', receiverType.PHONE, 1)
-  receivers.room154Phone = new Receiver(receiverID.PHONE_154, [1, 2], Colours.WHITE, 'Womens Washroom', receiverType.PHONE, 1)
+  receivers.frontDeskPhone = new Receiver(receiverID.PHONE_FRONT_DESK, Colours.WHITE, [1, 2], 'Reception Desk', receiverType.PHONE, 1)
+  receivers.room100Phone = new Receiver(receiverID.PHONE_100, Colours.WHITE, [1, 2], 'Front Lobby', receiverType.PHONE, 1)
+  receivers.room110Phone = new Receiver(receiverID.PHONE_110, Colours.WHITE, [1, 2], 'Conference Room', receiverType.PHONE, 1)
+  receivers.room130Phone = new Receiver(receiverID.PHONE_130, Colours.WHITE, [1, 2], 'Kitchen', receiverType.PHONE, 1)
+  receivers.room151Phone = new Receiver(receiverID.PHONE_151, Colours.WHITE, [1, 2], 'Gym', receiverType.PHONE, 1)
+  receivers.room155Phone = new Receiver(receiverID.PHONE_155, Colours.WHITE, [1, 2], 'Pool', receiverType.PHONE, 1)
+  receivers.room152Phone = new Receiver(receiverID.PHONE_152, Colours.WHITE, [1, 2], 'Mens Washroom', receiverType.PHONE, 1)
+  receivers.room154Phone = new Receiver(receiverID.PHONE_154, Colours.WHITE, [1, 2], 'Womens Washroom', receiverType.PHONE, 1)
 
   // Floor 2 phone initializing
-  receivers.room200Phone = new Receiver(receiverID.PHONE_200, [1, 2], Colours.WHITE, 'Floor 2 Hallway', receiverType.PHONE, 2)
-  receivers.room210Phone = new Receiver(receiverID.PHONE_210, [1, 2], Colours.WHITE, 'Room 210', receiverType.PHONE, 2)
-  receivers.room220Phone = new Receiver(receiverID.PHONE_220, [1, 2], Colours.WHITE, 'Room 220', receiverType.PHONE, 2)
-  receivers.room231Phone = new Receiver(receiverID.PHONE_231, [1, 2], Colours.WHITE, 'Room 231', receiverType.PHONE, 2)
-  receivers.room232Phone = new Receiver(receiverID.PHONE_232, [1, 2], Colours.WHITE, 'Room 232', receiverType.PHONE, 2)
-  receivers.room233Phone = new Receiver(receiverID.PHONE_233, [1, 2], Colours.WHITE, 'Room 233', receiverType.PHONE, 2)
-  receivers.room235Phone = new Receiver(receiverID.PHONE_235, [1, 2], Colours.WHITE, 'Room 235', receiverType.PHONE, 2)
-  receivers.room236Phone = new Receiver(receiverID.PHONE_236, [1, 2], Colours.WHITE, 'Room 236', receiverType.PHONE, 2)
-  receivers.room241Phone = new Receiver(receiverID.PHONE_241, [1, 2], Colours.WHITE, 'Room 241', receiverType.PHONE, 2)
-  receivers.room244Phone = new Receiver(receiverID.PHONE_244, [1, 2], Colours.WHITE, 'Room 244', receiverType.PHONE, 2)
-  receivers.room247Phone = new Receiver(receiverID.PHONE_247, [1, 2], Colours.WHITE, 'Room 247', receiverType.PHONE, 2)
-  receivers.room248Phone = new Receiver(receiverID.PHONE_248, [1, 2], Colours.WHITE, 'Room 248', receiverType.PHONE, 2)
+  receivers.room200Phone = new Receiver(receiverID.PHONE_200, Colours.WHITE, [1, 2], 'Floor 2 Hallway', receiverType.PHONE, 2)
+  receivers.room210Phone = new Receiver(receiverID.PHONE_210, Colours.WHITE, [1, 2], 'Room 210', receiverType.PHONE, 2)
+  receivers.room220Phone = new Receiver(receiverID.PHONE_220, Colours.WHITE, [1, 2], 'Room 220', receiverType.PHONE, 2)
+  receivers.room231Phone = new Receiver(receiverID.PHONE_231, Colours.WHITE, [1, 2], 'Room 231', receiverType.PHONE, 2)
+  receivers.room232Phone = new Receiver(receiverID.PHONE_232, Colours.WHITE, [1, 2], 'Room 232', receiverType.PHONE, 2)
+  receivers.room233Phone = new Receiver(receiverID.PHONE_233, Colours.WHITE, [1, 2], 'Room 233', receiverType.PHONE, 2)
+  receivers.room235Phone = new Receiver(receiverID.PHONE_235, Colours.WHITE, [1, 2], 'Room 235', receiverType.PHONE, 2)
+  receivers.room236Phone = new Receiver(receiverID.PHONE_236, Colours.WHITE, [1, 2], 'Room 236', receiverType.PHONE, 2)
+  receivers.room241Phone = new Receiver(receiverID.PHONE_241, Colours.WHITE, [1, 2], 'Room 241', receiverType.PHONE, 2)
+  receivers.room244Phone = new Receiver(receiverID.PHONE_244, Colours.WHITE, [1, 2], 'Room 244', receiverType.PHONE, 2)
+  receivers.room247Phone = new Receiver(receiverID.PHONE_247, Colours.WHITE, [1, 2], 'Room 247', receiverType.PHONE, 2)
+  receivers.room248Phone = new Receiver(receiverID.PHONE_248, Colours.WHITE, [1, 2], 'Room 248', receiverType.PHONE, 2)
 
   // initializing access points, first floor
-  receivers.room110AP = new Receiver(receiverID.AP1_1, [192, 165], Colours.WHITE, 'Conference Room', receiverType.ACCESS_P, 1)
-  receivers.room105AP = new Receiver(receiverID.AP1_3, [365, 408], Colours.WHITE, 'Dining Hall', receiverType.ACCESS_P, 1)
-  receivers.room100AP = new Receiver(receiverID.AP1_4, [361, 175], Colours.WHITE, 'Front Lobby', receiverType.ACCESS_P, 1)
-  receivers.hallEastAP_1 = new Receiver(receiverID.AP1_2, [582, 284], Colours.WHITE, 'First Floor East Hall', receiverType.ACCESS_P, 1)
+  receivers.room110AP = new Receiver(receiverID.AP1_1, Colours.WHITE, [192, 165], 'Conference Room', receiverType.ACCESS_P, 1)
+  receivers.room105AP = new Receiver(receiverID.AP1_3, Colours.WHITE, [365, 408], 'Dining Hall', receiverType.ACCESS_P, 1)
+  receivers.room100AP = new Receiver(receiverID.AP1_4, Colours.WHITE, [361, 175], 'Front Lobby', receiverType.ACCESS_P, 1)
+  receivers.hallEastAP_1 = new Receiver(receiverID.AP1_2, Colours.WHITE, [582, 284], 'First Floor East Hall', receiverType.ACCESS_P, 1)
 
   // initializing access points, second floor
-  receivers.hallWestAP = new Receiver(receiverID.AP2_1, [268, 655], Colours.WHITE, 'Second Floor West Hall', receiverType.ACCESS_P, 2)
-  receivers.hallEastAP_2 = new Receiver(receiverID.AP2_2, [588, 655], Colours.WHITE, 'Second Floor East Hall', receiverType.ACCESS_P, 2)
-  receivers.hallCenterAP = new Receiver(receiverID.AP2_3, [459, 655], Colours.WHITE, 'Second Floor Center Hall', receiverType.ACCESS_P, 2)
+  receivers.hallWestAP = new Receiver(receiverID.AP2_1, Colours.WHITE, [268, 655], 'Second Floor West Hall', receiverType.ACCESS_P, 2)
+  receivers.hallEastAP_2 = new Receiver(receiverID.AP2_2, Colours.WHITE, [588, 655], 'Second Floor East Hall', receiverType.ACCESS_P, 2)
+  receivers.hallCenterAP = new Receiver(receiverID.AP2_3, Colours.WHITE, [459, 655], 'Second Floor Center Hall', receiverType.ACCESS_P, 2)
 
   // initializing motion sensors
-  receivers.stairMS = new Receiver(receiverID.MS1, [715, 291, 715, 662], Colours.WHITE, 'Stairwell Sensor', receiverType.M_SENSOR, 1)
-  receivers.elevatorMS = new Receiver(receiverID.MS2, [363, 291, 363, 662], Colours.WHITE, 'Elevator', receiverType.M_SENSOR, 1)
-  receivers.room234MS = new Receiver(receiverID.MS3, [363, 799], Colours.WHITE, 'Ice/Vending Machines', receiverType.M_SENSOR, 2)
+  receivers.stairMS = new Receiver(receiverID.MS1, Colours.WHITE, [715, 291, 715, 662], 'Stairwell Sensor', receiverType.M_SENSOR, 1)
+  receivers.elevatorMS = new Receiver(receiverID.MS2, Colours.WHITE, [363, 291, 363, 662], 'Elevator', receiverType.M_SENSOR, 1)
+  receivers.room234MS = new Receiver(receiverID.MS3, Colours.WHITE, [363, 799], 'Ice/Vending Machines', receiverType.M_SENSOR, 2)
 
   visualizationArea.dataSet = dataSet
   visualizationArea.setup()
@@ -347,7 +347,7 @@ function drawReceivers () {
 
   // cont.fillRect(0,0,100,100);
   const trackedPerson = Object.values(people).filter(person => {
-    return person.name === tracking
+    return person.getName() === tracking
   })[0]
 
   Object.keys(receivers).forEach(element => {
@@ -440,6 +440,7 @@ function updateVisualization () {
 
   document.getElementById('updateCounter').textContent = 'Updates Displayed: ' + (queuedUpdateIndex + 1)
   document.getElementById('updateInfo').textContent = 'Update Info: ' + queuedUpdate.event + '|' + queuedUpdate['device-id'] + '|' + queuedUpdate['guest-id']
+  document.getElementById('currentTime').textContent= 'Current Time: '
 }
 
 document.getElementById('play').addEventListener('click', visualizationArea.play)
