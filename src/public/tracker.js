@@ -1,14 +1,16 @@
-//TODO Checklist person
-//TODO Skip to time
-//TODO Skip to update
-//TODO 'next action' for person being tracked
-//TODO motion sensors
-//TODO graph activity
-//TODO Average distance from room
+// TODO Checklist person
+// TODO Skip to time
+// TODO Skip to update
+// TODO 'next action' for person being tracked
+// TODO motion sensors
+// TODO graph activity
+// TODO Average distance from room
 
-// The person selected to be followed
-const select = document.getElementById('personSelect')
-let selectedPerson = select.options[select.selectedIndex].value
+// The people selected to be followed
+const checkboxesArray = Array.prototype.slice.call(document.getElementsByName('personSelect'))
+let selectedPeople = checkboxesArray.filter((checkbox) => {
+  return checkbox.checked === true
+})
 
 // Start timestamp of the dataset
 let startTimeSeconds = 1578151801
@@ -260,7 +262,7 @@ function startVisualizer (dataSet) {
   people.jason = new Person('Jason', Colours.BLUE, [0, 0], 'guest', 241)
   people.thomas = new Person('Thomas', Colours.ORANGE, [0, 0], 'guest', 248)
   people.rob = new Person('Rob', Colours.TURQUOISE, [0, 0], 'guest', 231)
-  people.kristina = new Person('Kristina',Colours.BLACK, [0, 0], 'guest', 235)
+  people.kristina = new Person('Kristina', Colours.BLACK, [0, 0], 'guest', 235)
 
   // initializing staff
   people.marc = new Person('Marc-Andre', Colours.VIOLET, [0, 0], 'cleaning', 0)
@@ -438,7 +440,6 @@ function checkUpdate (dataSet) {
 
 // Function to update the visualization area
 function updateVisualization () {
-
   // Clear the visualization area
   visualizationArea.clear()
 
@@ -454,7 +455,6 @@ function updateVisualization () {
 
     if (queuedUpdateDoor !== undefined) {
       if (queuedUpdatePerson !== undefined && queuedUpdatePerson.getName() === selectedPerson) {
-        
         queuedUpdateDoor.setColour(queuedUpdatePerson.getColour())
         queuedUpdateDoor.toggle()
       } else {
@@ -462,7 +462,7 @@ function updateVisualization () {
         queuedUpdateDoor.toggle()
       }
     }
-  } else if(queuedUpdate.device === receiverType.ACCESS_P){
+  } else if (queuedUpdate.device === receiverType.ACCESS_P) {
     if (queuedUpdate.event !== 'user disconnected') {
       // Update the receiver state
       const queuedUpdateReceiver = Object.values(receivers).filter(receiver => {
@@ -474,12 +474,10 @@ function updateVisualization () {
       })[0]
 
       if (queuedUpdateReceiver !== undefined && queuedUpdatePerson !== undefined) {
-        
-          queuedUpdatePerson.setConnection(queuedUpdateReceiver)
-        
+        queuedUpdatePerson.setConnection(queuedUpdateReceiver)
       }
     }
-  }else if(queuedUpdate.device === receiverType.M_SENSOR){
+  } else if (queuedUpdate.device === receiverType.M_SENSOR) {
     const queuedUpdateReceiver = Object.values(receivers).filter(receiver => {
         return receiver.getName() === queuedUpdate['device-id']
       })[0]
@@ -520,9 +518,16 @@ function nextAction () {
 }
 
 function selectPerson () {
-  const select = document.getElementById('personSelect')
-  const selected = select.options[select.selectedIndex].value
-  selectedPerson = selected
+  // Update the selected people based on the checked checkboxes
+  const checkboxesArray = Array.prototype.slice.call(document.getElementsByName('personSelect'))
+  selectedPeople = checkboxesArray.filter((checkbox) => {
+    return checkbox.checked === true
+  }).map((element) => {
+    return element.value
+  })
+
+  console.log(selectedPeople)
+
   updateVisualization()
 }
 
@@ -530,4 +535,7 @@ function selectPerson () {
 document.getElementById('play').addEventListener('click', visualizationArea.play)
 document.getElementById('pause').addEventListener('click', visualizationArea.pause)
 document.getElementById('next').addEventListener('click', nextAction)
-document.getElementById('personSelect').addEventListener('change', selectPerson)
+const personSelectCheckboxes = document.getElementsByName('personSelect')
+personSelectCheckboxes.forEach((checkbox) => {
+  checkbox.addEventListener('change', selectPerson)
+})
