@@ -165,7 +165,7 @@ class Person extends Entity {
     super(name, colour, position)
     this.role = role
     this.room = room
-    this.connection = 'none'
+    this.connection = ['none','0']
   }
 
   getRole () {
@@ -384,7 +384,7 @@ function drawReceivers () {
       // access points
         const pos = receivers[element].getPosition()
         const rad = receivers[element].getRadius()
-        if (receivers[element] === trackedPerson.getConnection()) {
+        if (receivers[element] === trackedPerson.getConnection()[0]) {
             cont.globalAlpha = 0.5
             cont.fillStyle = trackedPerson.getColour()
             cont.beginPath()
@@ -481,7 +481,7 @@ function updateVisualization () {
       })[0]
 
       if (queuedUpdateReceiver !== undefined && queuedUpdatePerson !== undefined) {
-        queuedUpdatePerson.setConnection(queuedUpdateReceiver)
+        queuedUpdatePerson.setConnection([queuedUpdateReceiver, queuedUpdate.time])
       }
     }
   } else if (queuedUpdate.device === receiverType.M_SENSOR) {
@@ -564,3 +564,77 @@ personSelectCheckboxes.forEach((checkbox) => {
   checkbox.addEventListener('change', selectPerson)
 })
 document.getElementById('gotoActionSubmit').addEventListener('click', () => gotoAction(document.getElementById('gotoActionInput').value))
+
+
+function mouseTracker(e){
+  var x = e.clientX;
+  var y = e.clientY;
+  if(x > 176 && y > 159 && x < 230 && y < 207){
+      
+      selectedPeople.forEach(selectedPerson => {
+        const trackedPerson = Object.values(people).filter(person => {
+            return person.getName() === selectedPerson
+        })[0]
+          if(trackedPerson.getConnection()[0].getName() == receiverID.AP1_1){
+              console.log(trackedPerson.getName() + ' connected to ' + receiverID.AP1_1+ ' at '+ trackedPerson.getConnection()[1])
+          }
+      })
+
+  }else if(x >342 && y > 163 && x < 400 && y < 219){
+      selectedPeople.forEach(selectedPerson => {
+        const trackedPerson = Object.values(people).filter(person => {
+            return person.getName() === selectedPerson
+        })[0]
+          if(trackedPerson.getConnection()[0].getName() == receiverID.AP1_4){
+              console.log(trackedPerson.getName() + ' connected to ' + receiverID.AP1_4+ ' at '+ trackedPerson.getConnection()[1])
+          }
+      })
+  }else if(x > 562 && y > 275 && x < 616 && y < 321){
+      selectedPeople.forEach(selectedPerson => {
+        const trackedPerson = Object.values(people).filter(person => {
+            return person.getName() === selectedPerson
+        })[0]
+          if(trackedPerson.getConnection()[0].getName() == receiverID.AP1_2){
+              console.log(trackedPerson.getName() + ' connected to ' + receiverID.AP1_2+ ' at '+ trackedPerson.getConnection()[1])
+          }
+      })
+  }else if(x > 340 && y > 388 && x < 400 && y < 451){
+      selectedPeople.forEach(selectedPerson => {
+        const trackedPerson = Object.values(people).filter(person => {
+            return person.getName() === selectedPerson
+        })[0]
+          if(trackedPerson.getConnection()[0].getName() == receiverID.AP1_3){
+              console.log(trackedPerson.getName() + ' connected to ' + receiverID.AP1_3+ ' at '+ trackedPerson.getConnection()[1])
+          }
+      })
+  }else if(x > 248 && y > 647 && x < 300 && y < 702){
+      selectedPeople.forEach(selectedPerson => {
+        const trackedPerson = Object.values(people).filter(person => {
+            return person.getName() === selectedPerson
+        })[0]
+          if(trackedPerson.getConnection()[0].getName() == receiverID.AP2_1){
+              console.log(trackedPerson.getName() + ' connected to ' + receiverID.AP2_1+ ' at '+ trackedPerson.getConnection()[1])
+          }
+      })
+  }else if(x > 442 && y > 647 && x < 492 && y < 702){
+    selectedPeople.forEach(selectedPerson => {
+        const trackedPerson = Object.values(people).filter(person => {
+            return person.getName() === selectedPerson
+        })[0]
+          if(trackedPerson.getConnection()[0].getName() == receiverID.AP2_3){
+              console.log(trackedPerson.getName() + ' connected to ' + receiverID.AP2_3+ ' at '+ trackedPerson.getConnection()[1])
+          }
+      })
+  }else if(x > 571 && y > 647 && x < 630 && y < 702){
+        selectedPeople.forEach(selectedPerson => {
+            const trackedPerson = Object.values(people).filter(person => {
+                return person.getName() === selectedPerson
+            })[0]
+              if(trackedPerson.getConnection()[0].getName() == receiverID.AP2_2){
+                  console.log(trackedPerson.getName() + ' connected to ' + receiverID.AP2_2+ ' at '+ trackedPerson.getConnection()[1])
+              }
+          })
+  }
+//   var coor = "Coordinates: (" + x + "," + y + ")";
+//   console.log(coor)
+}
