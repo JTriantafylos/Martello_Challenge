@@ -130,6 +130,7 @@ class Receiver extends Entity {
     this.region = region
     this.type = type
     this.level = level
+    this.active = false;
   }
 
   getSize () {
@@ -146,6 +147,12 @@ class Receiver extends Entity {
 
   getLevel () {
     return this.level
+  }
+  toggle(){
+    this.active = !(this.active);
+  }
+  isActive(){
+    return this.active;
   }
 }
 
@@ -363,8 +370,11 @@ function drawReceivers () {
   const trackedPerson = Object.values(people).filter(person => {
     return person.getName() === selectedPerson
   })[0]
+  
 
+  
   Object.keys(receivers).forEach(element => {
+    //access points
     if (receivers[element] === trackedPerson.getConnection()) {
       const pos = receivers[element].getPosition()
       cont.globalAlpha = 0.5
@@ -373,7 +383,33 @@ function drawReceivers () {
       cont.beginPath()
       cont.arc(pos[0], pos[1], 64, 0, 2 * Math.PI, false)
       cont.fill()
+    }else if(receivers[element].isActive()){
+        //motion sensors
+        if(receivers[element].getName() === receiverID.MS3){
+            const pos = receivers[element].getPosition()
+            cont.globalAlpha = 0.5
+            cont.fillStyle = receivers[element].getColour()
+            // cont.fillRect(pos[0], pos[1], 20, 20)
+            cont.beginPath()
+            cont.arc(pos[0], pos[1], 64, 0, 2 * Math.PI, false)
+            cont.fill()
+        }else{
+            const pos = receivers[element].getPosition()
+            cont.globalAlpha = 0.5
+            cont.fillStyle = receivers[element].getColour()
+            // cont.fillRect(pos[0], pos[1], 20, 20)
+            cont.beginPath()
+            cont.arc(pos[0], pos[1], 64, 0, 2 * Math.PI, false)
+            cont.fill()
+            cont.arc(pos[2], pos[3], 64, 0, 2 * Math.PI, false)
+            cont.fill()
+        }
+        
+        receivers[element].toggle();
+
     }
+
+    
   })
 }
 
@@ -444,6 +480,12 @@ function updateVisualization () {
       }
     }
   }else if(queuedUpdate.device === receiverType.M_SENSOR){
+    const queuedUpdateReceiver = Object.values(receivers).filter(receiver => {
+        return receiver.getName() === queuedUpdate['device-id']
+      })[0]
+     queuedUpdateReceiver.toggle();
+     
+  }else if(queuedUpdate.device === receiverType.PHONE){
     const queuedUpdateReceiver = Object.values(receivers).filter(receiver => {
         return receiver.getName() === queuedUpdate['device-id']
       })[0]
