@@ -6,9 +6,11 @@
 // TODO graph activity
 // TODO Average distance from room
 
-// The person selected to be followed
-const select = document.getElementById('personSelect')
-let selectedPerson = select.options[select.selectedIndex].value
+// The people selected to be followed
+const checkboxesArray = Array.prototype.slice.call(document.getElementsByName('personSelect'))
+let selectedPeople = checkboxesArray.filter((checkbox) => {
+  return checkbox.checked === true
+})
 
 // Start timestamp of the dataset
 let startTimeSeconds = 1578151801
@@ -359,21 +361,22 @@ function drawDoors () {
 function drawReceivers () {
   const cont = visualizationArea.canvas.context
 
-  // cont.fillRect(0,0,100,100);
-  const trackedPerson = Object.values(people).filter(person => {
-    return person.getName() === selectedPerson
-  })[0]
+  selectedPeople.forEach((selectedPerson) => {
+    const trackedPerson = Object.values(people).filter(person => {
+      return person.getName() === selectedPerson
+    })[0]
 
-  Object.keys(receivers).forEach(element => {
-    if (receivers[element] === trackedPerson.getConnection()) {
-      const pos = receivers[element].getPosition()
-      cont.globalAlpha = 0.5
-      cont.fillStyle = trackedPerson.getColour()
-      // cont.fillRect(pos[0], pos[1], 20, 20)
-      cont.beginPath()
-      cont.arc(pos[0], pos[1], 64, 0, 2 * Math.PI, false)
-      cont.fill()
-    }
+    Object.keys(receivers).forEach(element => {
+      if (receivers[element] === trackedPerson.getConnection()) {
+        const pos = receivers[element].getPosition()
+        cont.globalAlpha = 0.5
+        cont.fillStyle = trackedPerson.getColour()
+        // cont.fillRect(pos[0], pos[1], 20, 20)
+        cont.beginPath()
+        cont.arc(pos[0], pos[1], 64, 0, 2 * Math.PI, false)
+        cont.fill()
+      }
+    })
   })
 }
 
@@ -474,9 +477,16 @@ function nextAction () {
 }
 
 function selectPerson () {
-  const select = document.getElementById('personSelect')
-  const selected = select.options[select.selectedIndex].value
-  selectedPerson = selected
+  // Update the selected people based on the checked checkboxes
+  const checkboxesArray = Array.prototype.slice.call(document.getElementsByName('personSelect'))
+  selectedPeople = checkboxesArray.filter((checkbox) => {
+    return checkbox.checked === true
+  }).map((element) => {
+    return element.value
+  })
+
+  console.log(selectedPeople)
+
   updateVisualization()
 }
 
@@ -484,4 +494,7 @@ function selectPerson () {
 document.getElementById('play').addEventListener('click', visualizationArea.play)
 document.getElementById('pause').addEventListener('click', visualizationArea.pause)
 document.getElementById('next').addEventListener('click', nextAction)
-document.getElementById('personSelect').addEventListener('change', selectPerson)
+const personSelectCheckboxes = document.getElementsByName('personSelect')
+personSelectCheckboxes.forEach((checkbox) => {
+  checkbox.addEventListener('change', selectPerson)
+})
