@@ -10,6 +10,14 @@ for (const timestamp in dataSet) {
   }
 }
 
+// Scrape each person from the dataset
+const people = []
+for (const timestamp in dataSet) {
+  if (!people.includes(dataSet[timestamp]['guest-id'])) {
+    people.push(dataSet[timestamp]['guest-id'])
+  }
+}
+
 // Add an time field to each object in the dataset using epoch time
 for (const timestamp in dataSet) {
   dataSet[timestamp].time = timestamp
