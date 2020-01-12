@@ -355,7 +355,7 @@ function drawReceivers () {
       const pos = receivers[element].getPosition()
       cont.globalAlpha = 0.5
       cont.fillStyle = trackedPerson.getColour()
-      // cont.fillRect(pos[0], pos[1], size[0], size[1])
+      // cont.fillRect(pos[0], pos[1], 20, 20)
       cont.beginPath()
       cont.arc(pos[0], pos[1], 64, 0, 2 * Math.PI, false)
       cont.fill()
