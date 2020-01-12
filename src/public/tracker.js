@@ -510,7 +510,7 @@ function nextFollowedAction () {
     queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
 
     // Check if the user is attemping to access an update that does not exist
-    if (queuedUpdateIndex >= Object.keys(dataSet).length || queuedUpdateIndex < -1) {
+    if (queuedUpdateIndex > Object.keys(dataSet).length || queuedUpdateIndex < -1) {
       alert('This person has no more updates!')
       return
     }
@@ -525,7 +525,7 @@ function prevAction () {
   const dataSet = visualizationArea.dataSet
 
   // Check if the user is attemping to access an update that does not exist
-  if (queuedUpdateIndex >= Object.keys(dataSet).length || queuedUpdateIndex < 0) {
+  if (queuedUpdateIndex > Object.keys(dataSet).length || queuedUpdateIndex < 0) {
     console.log(queuedUpdateIndex)
     alert('This is the end of the updates!')
     return
