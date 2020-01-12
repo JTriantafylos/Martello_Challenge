@@ -418,7 +418,7 @@ function updateVisualization () {
     const queuedUpdatePerson = Object.values(people).filter(person => {
       return person.getName() === queuedUpdate['guest-id']
     })[0]
-    console.log(queuedUpdateDoor)
+    
     if (queuedUpdateDoor !== undefined) {
       var itt = 0
       selectedPeople.forEach(selectedPerson => {
@@ -560,7 +560,7 @@ function mouseTracker(e){
         const trackedPerson = Object.values(people).filter(person => {
             return person.getName() === selectedPerson
         })[0]
-          if(trackedPerson.getConnection()[0].getName() == receiverID.AP1_1){
+          if(trackedPerson.getConnection()[0] !== 'none' && trackedPerson.getConnection()[0].getName() === receiverID.AP1_1){
               console.log(trackedPerson.getName() + ' connected to ' + receiverID.AP1_1+ ' at '+ trackedPerson.getConnection()[1])
           }
       })
@@ -570,7 +570,7 @@ function mouseTracker(e){
         const trackedPerson = Object.values(people).filter(person => {
             return person.getName() === selectedPerson
         })[0]
-          if(trackedPerson.getConnection()[0].getName() == receiverID.AP1_4){
+          if(trackedPerson.getConnection()[0] !== 'none' && trackedPerson.getConnection()[0].getName() === receiverID.AP1_4){
               console.log(trackedPerson.getName() + ' connected to ' + receiverID.AP1_4+ ' at '+ trackedPerson.getConnection()[1])
           }
       })
@@ -579,7 +579,7 @@ function mouseTracker(e){
         const trackedPerson = Object.values(people).filter(person => {
             return person.getName() === selectedPerson
         })[0]
-          if(trackedPerson.getConnection()[0].getName() == receiverID.AP1_2){
+          if(trackedPerson.getConnection()[0] !== 'none' && trackedPerson.getConnection()[0].getName() === receiverID.AP1_2){
               console.log(trackedPerson.getName() + ' connected to ' + receiverID.AP1_2+ ' at '+ trackedPerson.getConnection()[1])
           }
       })
@@ -588,7 +588,7 @@ function mouseTracker(e){
         const trackedPerson = Object.values(people).filter(person => {
             return person.getName() === selectedPerson
         })[0]
-          if(trackedPerson.getConnection()[0].getName() == receiverID.AP1_3){
+          if(trackedPerson.getConnection()[0] !== 'none' && trackedPerson.getConnection()[0].getName() === receiverID.AP1_3){
               console.log(trackedPerson.getName() + ' connected to ' + receiverID.AP1_3+ ' at '+ trackedPerson.getConnection()[1])
           }
       })
@@ -597,7 +597,7 @@ function mouseTracker(e){
         const trackedPerson = Object.values(people).filter(person => {
             return person.getName() === selectedPerson
         })[0]
-          if(trackedPerson.getConnection()[0].getName() == receiverID.AP2_1){
+          if(trackedPerson.getConnection()[0] !== 'none' && trackedPerson.getConnection()[0].getName() === receiverID.AP2_1){
               console.log(trackedPerson.getName() + ' connected to ' + receiverID.AP2_1+ ' at '+ trackedPerson.getConnection()[1])
           }
       })
@@ -606,7 +606,7 @@ function mouseTracker(e){
         const trackedPerson = Object.values(people).filter(person => {
             return person.getName() === selectedPerson
         })[0]
-          if(trackedPerson.getConnection()[0].getName() == receiverID.AP2_3){
+          if(trackedPerson.getConnection()[0] !== 'none' && trackedPerson.getConnection()[0].getName() === receiverID.AP2_3){
               console.log(trackedPerson.getName() + ' connected to ' + receiverID.AP2_3+ ' at '+ trackedPerson.getConnection()[1])
           }
       })
@@ -615,7 +615,7 @@ function mouseTracker(e){
             const trackedPerson = Object.values(people).filter(person => {
                 return person.getName() === selectedPerson
             })[0]
-              if(trackedPerson.getConnection()[0].getName() == receiverID.AP2_2){
+              if(trackedPerson.getConnection()[0] !== 'none' && trackedPerson.getConnection()[0].getName() === receiverID.AP2_2){
                   console.log(trackedPerson.getName() + ' connected to ' + receiverID.AP2_2+ ' at '+ trackedPerson.getConnection()[1])
               }
           })
