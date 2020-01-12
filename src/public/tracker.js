@@ -1,5 +1,6 @@
-// person being followed
-const tracking = 'Veronica'
+// The person selected to be followed
+const select = document.getElementById('personSelect')
+let selectedPerson = select.options[select.selectedIndex].value
 
 // Start timestamp of the dataset
 let startTimeSeconds = 1578151801
@@ -86,56 +87,63 @@ const receiverID = {
   MS2: 'elevator',
   MS3: 'ice machine'
 }
-class Entity{
-    constructor(name, colour, position){
-        this.name = name;
-        this.colour = colour;
-        this.position = position;
-    }
-    getName(){
-        return this.name;
-    }
-    getColour () {
-        return this.colour
-    }
-    getPosition () {
-        return this.position
-    }
-    setColour(col){
-        this.colour = col;
-    }
-    setPosition(pos){
-        this.position = pos;
-    }
+class Entity {
+  constructor (name, colour, position) {
+    this.name = name
+    this.colour = colour
+    this.position = position
+  }
 
+  getName () {
+    return this.name
+  }
+
+  getColour () {
+    return this.colour
+  }
+
+  getPosition () {
+    return this.position
+  }
+
+  setColour (col) {
+    this.colour = col
+  }
+
+  setPosition (pos) {
+    this.position = pos
+  }
 }
-class Receiver extends Entity{
+class Receiver extends Entity {
   constructor (name, colour, position, region, type, level) {
-    super(name, colour, position);
+    super(name, colour, position)
     this.height = 15
     this.width = 15
     this.region = region
     this.type = type
     this.level = level
   }
+
   getSize () {
     return [this.width, this.height]
   }
-  getRegion(){
-    return this.region;
+
+  getRegion () {
+    return this.region
   }
-  getType(){
-      return this.type;
+
+  getType () {
+    return this.type
   }
-  getLevel(){
-      return this.level;
+
+  getLevel () {
+    return this.level
   }
-  
 }
 
-class Person extends Entity{
+class Person extends Entity {
   constructor (name, colour, position, role, room) {
-    super(name, colour, position);
+    super(name, colour, position)
     this.role = role
     this.room = room
     this.connection = 'none'
@@ -158,9 +166,9 @@ class Person extends Entity{
   }
 }
 
-class Door extends Entity   {
+class Door extends Entity {
   constructor (name, colour, position, mode) {
-    super(name, colour, position);
+    super(name, colour, position)
     this.height = 6
     this.width = 30
     this.mode = mode
@@ -184,12 +192,9 @@ class Door extends Entity   {
     this.width = x
   }
 
-  
   getSize () {
     return [this.width, this.height]
   }
-
-  
 }
 
 requestDataSet((dataSet) => {
@@ -205,7 +210,7 @@ function startVisualizer (dataSet) {
   doors.conference = new Door('110', Colours.BROWN, [258, 160], false)
   doors.conference.rotate()
   // doors.dining = new Door('105', [270, 320], false, Colours.BROWN)
-  doors.kitchen = new Door('130',  Colours.BROWN,[258, 400], false)
+  doors.kitchen = new Door('130', Colours.BROWN, [258, 400], false)
   doors.kitchen.rotate()
   doors.gym = new Door('151', Colours.BROWN, [503, 246], false)
   // doors.mens_washroom = new Door('152', [484, 324], false, Colours.BROWN)
@@ -236,7 +241,7 @@ function startVisualizer (dataSet) {
   doors.stairwell_2.rotate()
 
   // initializing guests
-  people.veronica = new Person('Veronica', Colours.RED,[0, 0], 'guest', 210)
+  people.veronica = new Person('Veronica', Colours.RED, [0, 0], 'guest', 210)
   people.jason = new Person('Jason', Colours.BLUE, [0, 0], 'guest', 241)
   people.thomas = new Person('Thomas', Colours.ORANGE, [0, 0], 'guest', 248)
   people.rob = new Person('Rob', Colours.TURQUOISE, [0, 0], 'guest', 231)
@@ -348,7 +353,7 @@ function drawReceivers () {
 
   // cont.fillRect(0,0,100,100);
   const trackedPerson = Object.values(people).filter(person => {
-    return person.getName() === tracking
+    return person.getName() === selectedPerson
   })[0]
 
   Object.keys(receivers).forEach(element => {
@@ -356,7 +361,7 @@ function drawReceivers () {
       const pos = receivers[element].getPosition()
       cont.globalAlpha = 0.5
       cont.fillStyle = trackedPerson.getColour()
-      // cont.fillRect(pos[0], pos[1], size[0], size[1])
+      // cont.fillRect(pos[0], pos[1], 20, 20)
       cont.beginPath()
       cont.arc(pos[0], pos[1], 64, 0, 2 * Math.PI, false)
       cont.fill()
@@ -425,7 +430,7 @@ function updateVisualization () {
       })[0]
 
       if (queuedUpdateReceiver !== undefined) {
-        if (queuedUpdatePerson !== undefined && queuedUpdatePerson.getName() === tracking) {
+        if (queuedUpdatePerson !== undefined && queuedUpdatePerson.getName() === selectedPerson) {
           queuedUpdatePerson.setConnection(queuedUpdateReceiver)
         }
       }
@@ -445,12 +450,10 @@ function updateVisualization () {
 
   document.getElementById('updateCounter').textContent = 'Updates Displayed: ' + (queuedUpdateIndex + 1)
   document.getElementById('updateInfo').textContent = 'Update Info: ' + queuedUpdate.event + '|' + queuedUpdate['device-id'] + '|' + queuedUpdate['guest-id']
-  document.getElementById('currentTime').textContent= 'Current Time: '
+  document.getElementById('currentTime').textContent = 'Current Time: ' + new Date(parseInt(queuedUpdate.time * 1000)).toLocaleString()
 }
 
-document.getElementById('play').addEventListener('click', visualizationArea.play)
-document.getElementById('pause').addEventListener('click', visualizationArea.pause)
-document.getElementById('next').addEventListener('click', nextAction)
+// Function to visualize the next action in the dataset
 function nextAction () {
   const dataSet = visualizationArea.dataSet
 
@@ -465,3 +468,15 @@ function nextAction () {
     startTimeSeconds = parseInt(Object.keys(dataSet)[queuedUpdateIndex])
   }
 }
+
+function selectPerson () {
+  const select = document.getElementById('personSelect')
+  const selected = select.options[select.selectedIndex].value
+  selectedPerson = selected
+}
+
+// HTML element event listeners
+document.getElementById('play').addEventListener('click', visualizationArea.play)
+document.getElementById('pause').addEventListener('click', visualizationArea.pause)
+document.getElementById('next').addEventListener('click', nextAction)
+document.getElementById('personSelect').addEventListener('change', selectPerson)
