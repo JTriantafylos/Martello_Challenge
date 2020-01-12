@@ -1,3 +1,11 @@
+//TODO Checklist person
+//TODO Skip to time
+//TODO Skip to update
+//TODO 'next action' for person being tracked
+//TODO motion sensors
+//TODO graph activity
+//TODO Average distance from room
+
 // The person selected to be followed
 const select = document.getElementById('personSelect')
 let selectedPerson = select.options[select.selectedIndex].value
@@ -409,7 +417,7 @@ function updateVisualization () {
     })[0]
 
     if (queuedUpdateDoor !== undefined) {
-      if (queuedUpdatePerson !== undefined && queuedUpdatePerson.getName() === tracking) {
+      if (queuedUpdatePerson !== undefined && queuedUpdatePerson.getName() === selectedPerson) {
         
         queuedUpdateDoor.setColour(queuedUpdatePerson.getColour())
         queuedUpdateDoor.toggle()
@@ -429,10 +437,10 @@ function updateVisualization () {
         return person.getName() === queuedUpdate['guest-id']
       })[0]
 
-      if (queuedUpdateReceiver !== undefined) {
-        if (queuedUpdatePerson !== undefined && queuedUpdatePerson.getName() === selectedPerson) {
+      if (queuedUpdateReceiver !== undefined && queuedUpdatePerson !== undefined) {
+        
           queuedUpdatePerson.setConnection(queuedUpdateReceiver)
-        }
+        
       }
     }
   }else if(queuedUpdate.device === receiverType.M_SENSOR){
@@ -450,7 +458,7 @@ function updateVisualization () {
 
   document.getElementById('updateCounter').textContent = 'Updates Displayed: ' + (queuedUpdateIndex + 1)
   document.getElementById('updateInfo').textContent = 'Update Info: ' + queuedUpdate.event + '|' + queuedUpdate['device-id'] + '|' + queuedUpdate['guest-id']
-  document.getElementById('currentTime').textContent = 'Current Time: ' + new Date(parseInt(queuedUpdate.time * 1000)).toLocaleString()
+  document.getElementById('currentTime').textContent = 'Current Time: ' + new Date(parseInt(queuedUpdate.time * 1000)).toLocaleTimeString()
 }
 
 // Function to visualize the next action in the dataset
@@ -473,6 +481,7 @@ function selectPerson () {
   const select = document.getElementById('personSelect')
   const selected = select.options[select.selectedIndex].value
   selectedPerson = selected
+  updateVisualization()
 }
 
 // HTML element event listeners
