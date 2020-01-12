@@ -1,5 +1,5 @@
-//person being followed
-let tracking = 'Veronica';
+// person being followed
+const tracking = 'Veronica'
 
 // Start timestamp of the dataset
 let startTimeSeconds = 1578151801
@@ -168,8 +168,8 @@ class Door {
   toggleMode () {
     this.mode = !(this.mode)
     this.rotate()
-    if(!this.mode){
-        this.colour = Colours.BROWN;
+    if (!this.mode) {
+      this.colour = Colours.BROWN
     }
   }
 
@@ -193,7 +193,7 @@ class Door {
 }
 
 requestDataSet((dataSet) => {
- dataSet = JSON.parse(dataSet)
+  dataSet = JSON.parse(dataSet)
   queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
   queuedUpdateTimeSeconds = parseInt(Object.keys(dataSet)[queuedUpdateIndex])
   startTimeSeconds = parseInt(Object.keys(dataSet)[queuedUpdateIndex])
@@ -204,12 +204,12 @@ function startVisualizer (dataSet) {
   // initializing first floor doors
   doors.conference = new Door('110', [258, 160], false, Colours.BROWN)
   doors.conference.rotate()
-  //doors.dining = new Door('105', [270, 320], false, Colours.BROWN)
+  // doors.dining = new Door('105', [270, 320], false, Colours.BROWN)
   doors.kitchen = new Door('130', [258, 400], false, Colours.BROWN)
   doors.kitchen.rotate()
   doors.gym = new Door('151', [503, 246], false, Colours.BROWN)
-  //doors.mens_washroom = new Door('152', [484, 324], false, Colours.BROWN)
-  //doors.womens_washroom = new Door('154', [562, 324], false, Colours.BROWN)
+  // doors.mens_washroom = new Door('152', [484, 324], false, Colours.BROWN)
+  // doors.womens_washroom = new Door('154', [562, 324], false, Colours.BROWN)
   doors.reception = new Door('101', [463, 119], false, Colours.BROWN)
   doors.reception.rotate()
   doors.pool = new Door('155', [620, 246], false, Colours.BROWN)
@@ -336,7 +336,7 @@ function checkUpdate (dataSet) {
   }
 
   // Check if it is time for the queued update to be taken
-  if (queuedUpdateTimeSeconds === dataTimeCurrentSeconds ) {
+  if (queuedUpdateTimeSeconds === dataTimeCurrentSeconds) {
     updateVisualization()
     // Populate the queued update with the next update from the dataset
     queuedUpdateIndex++
@@ -355,7 +355,7 @@ function updateVisualization () {
 
   // Draw the doors to the canvas
   drawDoors()
-  
+
   // Check if the queued update is a door sensor update
   if (queuedUpdate.device === receiverType.D_SENSOR) {
     // Update the door state
@@ -363,28 +363,24 @@ function updateVisualization () {
       return door.room === queuedUpdate['device-id']
     })[0]
     const queuedUpdatePerson = Object.values(people).filter(person => {
-   
-         return person.name === queuedUpdate['guest-id']
-      })[0]
+      return person.name === queuedUpdate['guest-id']
+    })[0]
 
-    if(queuedUpdateDoor != undefined){
-        if(queuedUpdatePerson != undefined && queuedUpdatePerson.getName() == tracking){
-            console.log(queuedUpdate);
-            queuedUpdateDoor.setColour(queuedUpdatePerson.getColour());
-            queuedUpdateDoor.toggleMode();
-        }else{
-            queuedUpdateDoor.setColour(Colours.BROWN);
-            queuedUpdateDoor.toggleMode();
-        }
+    if (queuedUpdateDoor !== undefined) {
+      if (queuedUpdatePerson !== undefined && queuedUpdatePerson.getName() === tracking) {
+        console.log(queuedUpdate)
+        queuedUpdateDoor.setColour(queuedUpdatePerson.getColour())
+        queuedUpdateDoor.toggleMode()
+      } else {
+        queuedUpdateDoor.setColour(Colours.BROWN)
+        queuedUpdateDoor.toggleMode()
+      }
     }
-    
-
   } else {
     // Update the receiver state
     const queuedUpdateReceiver = Object.values(receivers).filter(receiver => {
       return receiver.name === queuedUpdate['device-id']
     })[0]
     if (queuedUpdateReceiver === undefined) { console.error('UNDEFINED!') }
-    
   }
 }
