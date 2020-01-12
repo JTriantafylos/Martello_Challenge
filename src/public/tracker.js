@@ -157,7 +157,7 @@ class Person extends Entity{
   }
 }
 
-class Door extends Entity{
+class Door extends Entity   {
   constructor (name, colour, position, mode) {
     super(name, colour, position);
     this.height = 6
