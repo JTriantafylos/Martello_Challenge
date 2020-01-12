@@ -1,6 +1,5 @@
 // TODO speed
 // TODO Skip to time
-// TODO 'next action' for person being tracked
 // TODO graph activity
 // TODO Average distance from room
 // TODO tool tips  - last connected
@@ -12,6 +11,15 @@ let selectedPeople = checkboxesArray.filter((checkbox) => {
 }).map((element) => {
   return element.value
 })
+
+// Time of first update
+const startTime = 1578151801
+
+// Time of last update
+const endTime = 1578236760
+
+// Time of current update
+let currentTime = startTime
 
 // The next updated queued to be visualized
 let queuedUpdate
@@ -474,8 +482,9 @@ function updateVisualization () {
 
   // Update display info
   document.getElementById('updateCounter').textContent = 'Updates Displayed: ' + (queuedUpdateIndex + 1)
-  document.getElementById('updateInfo').textContent = 'Update Info: ' + queuedUpdate.event + '|' + queuedUpdate['device-id'] + '|' + queuedUpdate['guest-id']
-  document.getElementById('currentTime').textContent = 'Current Time: ' + new Date(parseInt(queuedUpdate.time * 1000)).toLocaleTimeString()
+  document.getElementById('updateInfo').textContent = 'Update Info: ' + queuedUpdate.event + ' | ' + queuedUpdate['device-id'] + ' | ' + queuedUpdate['guest-id']
+  currentTime = new Date(parseInt(queuedUpdate.time * 1000)).toLocaleTimeString()
+  document.getElementById('currentTime').textContent = 'Current Time: ' + currentTime 
 }
 
 // Function to visualize the next action in the dataset
@@ -512,8 +521,8 @@ function nextFollowedAction () {
 }
 
 // Function to goto a specific action
-function gotoAction (actionNumber) {
-  document.getElementById('gotoActionInput').value = ''
+function gotoUpdate (actionNumber) {
+  document.getElementById('gotoUpdateInput').value = ''
 
   queuedUpdateIndex = -1
   startVisualizer(visualizationArea.dataSet)
@@ -521,6 +530,36 @@ function gotoAction (actionNumber) {
   for (let i = 0; i < actionNumber; i++) {
     nextAction()
   }
+}
+
+// Function to goto a specific action
+function advanceTime () {
+  const hours = document.getElementById('advanceTimeHoursInput').value
+  const minutes = document.getElementById('advanceTimeMinutesInput').value
+  const seconds = document.getElementById('advanceTimeSecondsInput').value
+
+  const timeAdvance = ((hours * 3600) + (minutes * 60) + seconds) * 1000
+  const newTime = currentTime + timeAdvance
+
+  if (newTime > endTime) {
+    alert('Time too far in future! Please enter a valid time advance.')
+    return
+  }
+
+  let updateIndex = 0
+  let currentUpdateTime = Object.keys(visualizationArea.dataSet)[updateIndex]
+  let nextUpdateTime = Object.keys(visualizationArea.dataSet)[updateIndex]
+
+  // Continue iterating through updates until an update after the new time is found
+  while (!(currentUpdateTime < newTime && nextUpdateTime > newTime)) {
+    // Iterate to the next update
+    console.log(newTime)
+    updateIndex++
+    currentUpdateTime = Object.keys(visualizationArea.dataSet)[updateIndex]
+    nextUpdateTime = Object.keys(visualizationArea.dataSet)[updateIndex]
+  }
+
+  gotoUpdate(updateIndex)
 }
 
 function selectPerson () {
@@ -532,7 +571,7 @@ function selectPerson () {
     return element.value
   })
 
-  gotoAction(queuedUpdateIndex + 1)
+  gotoUpdate(queuedUpdateIndex + 1)
 }
 
 // HTML element event listeners
@@ -540,7 +579,8 @@ document.getElementById('play').addEventListener('click', visualizationArea.play
 document.getElementById('pause').addEventListener('click', visualizationArea.pause)
 document.getElementById('next').addEventListener('click', nextAction)
 document.getElementById('nextFollowed').addEventListener('click', nextFollowedAction)
-document.getElementById('gotoActionSubmit').addEventListener('click', () => gotoAction(document.getElementById('gotoActionInput').value))
+document.getElementById('gotoUpdateSubmit').addEventListener('click', () => gotoUpdate(document.getElementById('gotoUpdateInput').value))
+document.getElementById('advanceTimeSubmit').addEventListener('click', () => advanceTime())
 
 const personSelectCheckboxes = document.getElementsByName('personSelect')
 personSelectCheckboxes.forEach((checkbox) => {
