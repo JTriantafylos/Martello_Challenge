@@ -324,6 +324,7 @@ const visualizationArea = {
 
   // Function to start the visualization
   setup: () => {
+    visualizationArea.canvas.innerHTML = ''
     visualizationArea.canvas.width = 785
     visualizationArea.canvas.height = 857
     visualizationArea.canvas.context = visualizationArea.canvas.getContext('2d')
@@ -524,6 +525,15 @@ function nextAction () {
     queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
     queuedUpdateTimeSeconds = parseInt(Object.keys(dataSet)[queuedUpdateIndex])
     startTimeSeconds = parseInt(Object.keys(dataSet)[queuedUpdateIndex])
+  }
+}
+
+// Function to goto a specific action
+function gotoAction (actionNumber) {
+  queuedUpdateIndex = 0
+
+  for (let i = 0; i < actionNumber; i++) {
+    nextAction()
   }
 }
 
