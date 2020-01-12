@@ -273,28 +273,28 @@ function startVisualizer (dataSet) {
   people.harrison = new Person('Harrison', Colours.GREEN, [0, 0], 'reception late-night', 0)
 
   // Floor 1 phone initializing
-  receivers.frontDeskPhone = new Receiver(receiverID.PHONE_FRONT_DESK, Colours.WHITE, [426, 180], 'Reception Desk', receiverType.PHONE, 1)
-  receivers.room100Phone = new Receiver(receiverID.PHONE_100, Colours.WHITE, [304, 125], 'Front Lobby', receiverType.PHONE, 1)
-  receivers.room110Phone = new Receiver(receiverID.PHONE_110, Colours.WHITE, [146, 138], 'Conference Room', receiverType.PHONE, 1)
-  receivers.room130Phone = new Receiver(receiverID.PHONE_130, Colours.WHITE, [146, 348], 'Kitchen', receiverType.PHONE, 1)
-  receivers.room151Phone = new Receiver(receiverID.PHONE_151, Colours.WHITE, [551, 169], 'Gym', receiverType.PHONE, 1)
-  receivers.room155Phone = new Receiver(receiverID.PHONE_155, Colours.WHITE, [653, 145], 'Pool', receiverType.PHONE, 1)
-  receivers.room152Phone = new Receiver(receiverID.PHONE_152, Colours.WHITE, [475, 437], 'Mens Washroom', receiverType.PHONE, 1)
-  receivers.room154Phone = new Receiver(receiverID.PHONE_154, Colours.WHITE, [573, 437], 'Womens Washroom', receiverType.PHONE, 1)
+  receivers.frontDeskPhone = new Receiver(receiverID.PHONE_FRONT_DESK, Colours.YELLOW, [426, 180], 'Reception Desk', receiverType.PHONE, 1)
+  receivers.room100Phone = new Receiver(receiverID.PHONE_100, Colours.YELLOW, [304, 125], 'Front Lobby', receiverType.PHONE, 1)
+  receivers.room110Phone = new Receiver(receiverID.PHONE_110, Colours.YELLOW, [146, 138], 'Conference Room', receiverType.PHONE, 1)
+  receivers.room130Phone = new Receiver(receiverID.PHONE_130, Colours.YELLOW, [146, 348], 'Kitchen', receiverType.PHONE, 1)
+  receivers.room151Phone = new Receiver(receiverID.PHONE_151, Colours.YELLOW, [551, 169], 'Gym', receiverType.PHONE, 1)
+  receivers.room155Phone = new Receiver(receiverID.PHONE_155, Colours.YELLOW, [653, 145], 'Pool', receiverType.PHONE, 1)
+  receivers.room152Phone = new Receiver(receiverID.PHONE_152, Colours.YELLOW, [475, 437], 'Mens Washroom', receiverType.PHONE, 1)
+  receivers.room154Phone = new Receiver(receiverID.PHONE_154, Colours.YELLOW, [573, 437], 'Womens Washroom', receiverType.PHONE, 1)
 
   // Floor 2 phone initializing
-  receivers.room200Phone = new Receiver(receiverID.PHONE_200, Colours.WHITE, [526, 658], 'Floor 2 Hallway', receiverType.PHONE, 2)
-  receivers.room210Phone = new Receiver(receiverID.PHONE_210, Colours.WHITE, [146, 508], 'Room 210', receiverType.PHONE, 2)
-  receivers.room220Phone = new Receiver(receiverID.PHONE_220, Colours.WHITE, [146, 807], 'Room 220', receiverType.PHONE, 2)
-  receivers.room231Phone = new Receiver(receiverID.PHONE_231, Colours.WHITE, [243, 508], 'Room 231', receiverType.PHONE, 2)
-  receivers.room232Phone = new Receiver(receiverID.PHONE_232, Colours.WHITE, [243, 807], 'Room 232', receiverType.PHONE, 2)
-  receivers.room233Phone = new Receiver(receiverID.PHONE_233, Colours.WHITE, [336, 508], 'Room 233', receiverType.PHONE, 2)
-  receivers.room235Phone = new Receiver(receiverID.PHONE_235, Colours.WHITE, [429, 508], 'Room 235', receiverType.PHONE, 2)
-  receivers.room236Phone = new Receiver(receiverID.PHONE_236, Colours.WHITE, [429, 807], 'Room 236', receiverType.PHONE, 2)
-  receivers.room241Phone = new Receiver(receiverID.PHONE_241, Colours.WHITE, [520, 508], 'Room 241', receiverType.PHONE, 2)
-  receivers.room244Phone = new Receiver(receiverID.PHONE_244, Colours.WHITE, [520, 807], 'Room 244', receiverType.PHONE, 2)
-  receivers.room247Phone = new Receiver(receiverID.PHONE_247, Colours.WHITE, [615, 508], 'Room 247', receiverType.PHONE, 2)
-  receivers.room248Phone = new Receiver(receiverID.PHONE_248, Colours.WHITE, [615, 807], 'Room 248', receiverType.PHONE, 2)
+  receivers.room200Phone = new Receiver(receiverID.PHONE_200, Colours.YELLOW, [526, 658], 'Floor 2 Hallway', receiverType.PHONE, 2)
+  receivers.room210Phone = new Receiver(receiverID.PHONE_210, Colours.YELLOW, [146, 508], 'Room 210', receiverType.PHONE, 2)
+  receivers.room220Phone = new Receiver(receiverID.PHONE_220, Colours.YELLOW, [146, 807], 'Room 220', receiverType.PHONE, 2)
+  receivers.room231Phone = new Receiver(receiverID.PHONE_231, Colours.YELLOW, [243, 508], 'Room 231', receiverType.PHONE, 2)
+  receivers.room232Phone = new Receiver(receiverID.PHONE_232, Colours.YELLOW, [243, 807], 'Room 232', receiverType.PHONE, 2)
+  receivers.room233Phone = new Receiver(receiverID.PHONE_233, Colours.YELLOW, [336, 508], 'Room 233', receiverType.PHONE, 2)
+  receivers.room235Phone = new Receiver(receiverID.PHONE_235, Colours.YELLOW, [429, 508], 'Room 235', receiverType.PHONE, 2)
+  receivers.room236Phone = new Receiver(receiverID.PHONE_236, Colours.YELLOW, [429, 807], 'Room 236', receiverType.PHONE, 2)
+  receivers.room241Phone = new Receiver(receiverID.PHONE_241, Colours.YELLOW, [520, 508], 'Room 241', receiverType.PHONE, 2)
+  receivers.room244Phone = new Receiver(receiverID.PHONE_244, Colours.YELLOW, [520, 807], 'Room 244', receiverType.PHONE, 2)
+  receivers.room247Phone = new Receiver(receiverID.PHONE_247, Colours.YELLOW, [615, 508], 'Room 247', receiverType.PHONE, 2)
+  receivers.room248Phone = new Receiver(receiverID.PHONE_248, Colours.YELLOW, [615, 807], 'Room 248', receiverType.PHONE, 2)
 
   // initializing access points, first floor
   receivers.room110AP = new Receiver(receiverID.AP1_1, Colours.WHITE, [192, 165], 'Conference Room', receiverType.ACCESS_P, 1)
@@ -376,35 +376,36 @@ function drawReceivers () {
 
     Object.keys(receivers).forEach(element => {
       // access points
-      if (receivers[element] === trackedPerson.getConnection()) {
         const pos = receivers[element].getPosition()
         const rad = receivers[element].getRadius()
-        cont.globalAlpha = 0.5
-        cont.fillStyle = trackedPerson.getColour()
-        // cont.fillRect(pos[0], pos[1], 20, 20)
-        cont.beginPath()
-        cont.arc(pos[0], pos[1], rad, 0, 2 * Math.PI, false)
-        cont.fill()
-      } else if (receivers[element].isActive()) {
-        // motion sensors
-        if (receivers[element].getName() !== receiverID.MS3) {
-          const pos = receivers[element].getPosition()
-          cont.globalAlpha = 0.5
-          cont.fillStyle = receivers[element].getColour()
-          // cont.fillRect(pos[0], pos[1], 20, 20)
-          cont.beginPath()
-          cont.arc(pos[0], pos[1], 64, 0, 2 * Math.PI, false)
-          cont.fill()
-          cont.arc(pos[2], pos[3], 64, 0, 2 * Math.PI, false)
-          cont.fill()
-        } else {
-          const pos = receivers[element].getPosition()
-          cont.globalAlpha = 0.5
-          cont.fillStyle = receivers[element].getColour()
-          // cont.fillRect(pos[0], pos[1], 20, 20)
-          cont.beginPath()
-          cont.arc(pos[0], pos[1], 64, 0, 2 * Math.PI, false)
-          cont.fill()
+        if (receivers[element] === trackedPerson.getConnection()) {
+            cont.globalAlpha = 0.5
+            cont.fillStyle = trackedPerson.getColour()
+            cont.beginPath()
+            cont.arc(pos[0], pos[1], rad, 0, 2 * Math.PI, false)
+            cont.fill()
+        }else if(receivers[element].isActive()){
+            //motion sensors or phone
+            
+            if(receivers[element].getName() !== receiverID.MS3){
+                cont.globalAlpha = 0.5
+                cont.fillStyle = receivers[element].getColour()
+                cont.beginPath()
+                cont.arc(pos[0], pos[1], rad, 0, 2 * Math.PI, false)
+                cont.fill()
+                cont.arc(pos[2], pos[3], rad, 0, 2 * Math.PI, false)
+                cont.fill()
+
+            }else{
+                cont.globalAlpha = 0.5
+                cont.fillStyle = receivers[element].getColour()
+                cont.beginPath()
+                cont.arc(pos[0], pos[1], rad, 0, 2 * Math.PI, false)
+                cont.fill()
+            }
+            if(receivers[element].getType() !== receiverType.PHONE){
+                receivers[element].toggle();
+            }
         }
 
         receivers[element].toggle()
