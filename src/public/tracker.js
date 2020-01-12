@@ -2,7 +2,6 @@
 // TODO Skip to time
 // TODO graph activity
 // TODO Average distance from room
-// TODO tool tips  - last connected
 
 // The people selected to be followed
 const checkboxesArray = Array.prototype.slice.call(document.getElementsByName('personSelect'))
@@ -482,7 +481,7 @@ function updateVisualization () {
 
   // Update display info
   document.getElementById('updateCounter').textContent = 'Updates Displayed: ' + (queuedUpdateIndex + 1)
-  document.getElementById('updateInfo').textContent = 'Update Info: ' + queuedUpdate.event + ' | ' + queuedUpdate['device-id'] + ' | ' + queuedUpdate['guest-id']
+  document.getElementById('updateInfo').textContent = 'Current Event: ' + queuedUpdate.event + ' | ' + queuedUpdate['device-id'] + ' | ' + queuedUpdate['guest-id']
   currentTime = queuedUpdate.time
   document.getElementById('currentTime').textContent = 'Current Time: ' + new Date(parseInt(queuedUpdate.time * 1000)).toLocaleTimeString()
 }
@@ -595,6 +594,7 @@ personSelectCheckboxes.forEach((checkbox) => {
 function mouseTracker(e){
   var x = e.clientX;
   var y = e.clientY;
+  document.getElementById('connectionsLS').innerHTML = ''
   if(x > 176 && y > 159 && x < 230 && y < 207){
       
       selectedPeople.forEach(selectedPerson => {
@@ -602,7 +602,9 @@ function mouseTracker(e){
             return person.getName() === selectedPerson
         })[0]
           if(trackedPerson.getConnection()[0] !== 'none' && trackedPerson.getConnection()[0].getName() === receiverID.AP1_1){
-              console.log(trackedPerson.getName() + ' connected to ' + receiverID.AP1_1+ ' at '+ trackedPerson.getConnection()[1])
+              let listItem = document.createElement('li')
+              listItem.textContent = trackedPerson.getName() +' connected to ' + receiverID.AP1_1+ ' at '+ new Date(parseInt(trackedPerson.getConnection()[1] * 1000)).toLocaleTimeString()
+              document.getElementById('connectionsLS').appendChild(listItem)
           }
       })
 
@@ -612,7 +614,9 @@ function mouseTracker(e){
             return person.getName() === selectedPerson
         })[0]
           if(trackedPerson.getConnection()[0] !== 'none' && trackedPerson.getConnection()[0].getName() === receiverID.AP1_4){
-              console.log(trackedPerson.getName() + ' connected to ' + receiverID.AP1_4+ ' at '+ trackedPerson.getConnection()[1])
+            let listItem = document.createElement('li')
+            listItem.textContent = trackedPerson.getName() +' connected to ' + receiverID.AP1_4+ ' at '+ new Date(parseInt(trackedPerson.getConnection()[1] * 1000)).toLocaleTimeString()
+            document.getElementById('connectionsLS').appendChild(listItem)
           }
       })
   }else if(x > 562 && y > 275 && x < 616 && y < 321){
@@ -621,7 +625,9 @@ function mouseTracker(e){
             return person.getName() === selectedPerson
         })[0]
           if(trackedPerson.getConnection()[0] !== 'none' && trackedPerson.getConnection()[0].getName() === receiverID.AP1_2){
-              console.log(trackedPerson.getName() + ' connected to ' + receiverID.AP1_2+ ' at '+ trackedPerson.getConnection()[1])
+            let listItem = document.createElement('li')
+            listItem.textContent = trackedPerson.getName() +' connected to ' + receiverID.AP1_2+ ' at '+ new Date(parseInt(trackedPerson.getConnection()[1] * 1000)).toLocaleTimeString()
+            document.getElementById('connectionsLS').appendChild(listItem)
           }
       })
   }else if(x > 340 && y > 388 && x < 400 && y < 451){
@@ -630,7 +636,9 @@ function mouseTracker(e){
             return person.getName() === selectedPerson
         })[0]
           if(trackedPerson.getConnection()[0] !== 'none' && trackedPerson.getConnection()[0].getName() === receiverID.AP1_3){
-              console.log(trackedPerson.getName() + ' connected to ' + receiverID.AP1_3+ ' at '+ trackedPerson.getConnection()[1])
+            let listItem = document.createElement('li')
+            listItem.textContent = trackedPerson.getName() +' connected to ' + receiverID.AP1_3+ ' at '+ new Date(parseInt(trackedPerson.getConnection()[1] * 1000)).toLocaleTimeString()
+            document.getElementById('connectionsLS').appendChild(listItem)
           }
       })
   }else if(x > 248 && y > 647 && x < 300 && y < 702){
@@ -639,7 +647,9 @@ function mouseTracker(e){
             return person.getName() === selectedPerson
         })[0]
           if(trackedPerson.getConnection()[0] !== 'none' && trackedPerson.getConnection()[0].getName() === receiverID.AP2_1){
-              console.log(trackedPerson.getName() + ' connected to ' + receiverID.AP2_1+ ' at '+ trackedPerson.getConnection()[1])
+            let listItem = document.createElement('li')
+            listItem.textContent = trackedPerson.getName() +' connected to ' + receiverID.AP2_1+ ' at '+ new Date(parseInt(trackedPerson.getConnection()[1] * 1000)).toLocaleTimeString()
+            document.getElementById('connectionsLS').appendChild(listItem)
           }
       })
   }else if(x > 442 && y > 647 && x < 492 && y < 702){
@@ -648,7 +658,9 @@ function mouseTracker(e){
             return person.getName() === selectedPerson
         })[0]
           if(trackedPerson.getConnection()[0] !== 'none' && trackedPerson.getConnection()[0].getName() === receiverID.AP2_3){
-              console.log(trackedPerson.getName() + ' connected to ' + receiverID.AP2_3+ ' at '+ trackedPerson.getConnection()[1])
+            let listItem = document.createElement('li')
+            listItem.textContent = trackedPerson.getName() +' connected to ' + receiverID.AP2_3+ ' at '+ new Date(parseInt(trackedPerson.getConnection()[1] * 1000)).toLocaleTimeString()
+            document.getElementById('connectionsLS').appendChild(listItem)
           }
       })
   }else if(x > 571 && y > 647 && x < 630 && y < 702){
@@ -657,10 +669,11 @@ function mouseTracker(e){
                 return person.getName() === selectedPerson
             })[0]
               if(trackedPerson.getConnection()[0] !== 'none' && trackedPerson.getConnection()[0].getName() === receiverID.AP2_2){
-                  console.log(trackedPerson.getName() + ' connected to ' + receiverID.AP2_2+ ' at '+ trackedPerson.getConnection()[1])
+                let listItem = document.createElement('li')
+                listItem.textContent = trackedPerson.getName() +' connected to ' + receiverID.AP2_2+ ' at '+ new Date(parseInt(trackedPerson.getConnection()[1] * 1000)).toLocaleTimeString()
+                document.getElementById('connectionsLS').appendChild(listItem)
               }
           })
   }
-//   var coor = "Coordinates: (" + x + "," + y + ")";
-//   console.log(coor)
+
 }
