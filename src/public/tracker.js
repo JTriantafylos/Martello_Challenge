@@ -367,52 +367,54 @@ function drawDoors () {
 
 function drawReceivers () {
   const cont = visualizationArea.canvas.context
-
-  // cont.fillRect(0,0,100,100);
-  const trackedPerson = Object.values(people).filter(person => {
-    return person.getName() === selectedPerson
-  })[0]
-  
-
-  
-  Object.keys(receivers).forEach(element => {
-    //access points
-    if (receivers[element] === trackedPerson.getConnection()) {
-      const pos = receivers[element].getPosition()
-      cont.globalAlpha = 0.5
-      cont.fillStyle = trackedPerson.getColour()
-      // cont.fillRect(pos[0], pos[1], 20, 20)
-      cont.beginPath()
-      cont.arc(pos[0], pos[1], 64, 0, 2 * Math.PI, false)
-      cont.fill()
-    }else if(receivers[element].isActive()){
-        //motion sensors
-        if(receivers[element].getName() === receiverID.MS3){
-            const pos = receivers[element].getPosition()
-            cont.globalAlpha = 0.5
-            cont.fillStyle = receivers[element].getColour()
-            // cont.fillRect(pos[0], pos[1], 20, 20)
-            cont.beginPath()
-            cont.arc(pos[0], pos[1], 64, 0, 2 * Math.PI, false)
-            cont.fill()
-        }else{
-            const pos = receivers[element].getPosition()
-            cont.globalAlpha = 0.5
-            cont.fillStyle = receivers[element].getColour()
-            // cont.fillRect(pos[0], pos[1], 20, 20)
-            cont.beginPath()
-            cont.arc(pos[0], pos[1], 64, 0, 2 * Math.PI, false)
-            cont.fill()
-            cont.arc(pos[2], pos[3], 64, 0, 2 * Math.PI, false)
-            cont.fill()
-        }
-        
-        receivers[element].toggle();
-
-    }
-
+  console.log(selectedPeople)
+  (selectedPeople).forEach(selectedPerson =>{
+    // cont.fillRect(0,0,100,100);
     
+    const trackedPerson = Object.values(people).filter(person => {
+        return person === selectedPerson
+    })[0]
+    
+    Object.keys(receivers).forEach(element => {
+        //access points
+        if (receivers[element] === trackedPerson.getConnection()) {
+        const pos = receivers[element].getPosition()
+        cont.globalAlpha = 0.5
+        cont.fillStyle = trackedPerson.getColour()
+        // cont.fillRect(pos[0], pos[1], 20, 20)
+        cont.beginPath()
+        cont.arc(pos[0], pos[1], 64, 0, 2 * Math.PI, false)
+        cont.fill()
+        }else if(receivers[element].isActive()){
+            //motion sensors
+            if(receivers[element].getName() === receiverID.MS3){
+                const pos = receivers[element].getPosition()
+                cont.globalAlpha = 0.5
+                cont.fillStyle = receivers[element].getColour()
+                // cont.fillRect(pos[0], pos[1], 20, 20)
+                cont.beginPath()
+                cont.arc(pos[0], pos[1], 64, 0, 2 * Math.PI, false)
+                cont.fill()
+            }else{
+                const pos = receivers[element].getPosition()
+                cont.globalAlpha = 0.5
+                cont.fillStyle = receivers[element].getColour()
+                // cont.fillRect(pos[0], pos[1], 20, 20)
+                cont.beginPath()
+                cont.arc(pos[0], pos[1], 64, 0, 2 * Math.PI, false)
+                cont.fill()
+                cont.arc(pos[2], pos[3], 64, 0, 2 * Math.PI, false)
+                cont.fill()
+            }
+            
+            receivers[element].toggle();
+
+        }
+
+        
+    })
   })
+  
 }
 
 // Function to check if a visualization update is required
