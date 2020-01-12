@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<link href="https://fonts.googleapis.com/css?family=Nanum+Gothic&display=swap" rel="stylesheet">
 		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
@@ -12,51 +13,52 @@
 
 			<div id='info'>
 				<button id='next'>Next Action</button>
+				<button id='nextFollowed'>Next Followed Action</button>
 				<button id='play'>Play</button>
 				<button id='pause'>Pause</button>
 
 				<form id='personSelectCheckboxes'>
 					<div>
 						<input type="checkbox" name="personSelect" value="Veronica" checked=true>
-						<label for="Veronica">Veronica</label>
+						<label style='color: #ff2915' for="Veronica">Veronica</label>
 					</div>
 					<div>
 						<input type="checkbox" name="personSelect" value="Jason">
-						<label for="Jason">Jason</label>
+						<label style='color: #2925ff'for="Jason">Jason</label>
 					</div>
 					<div>
 						<input type="checkbox" name="personSelect" value="Thomas">
-						<label for="Thomas">Thomas</label>
+						<label style='color: #e38f28'for="Thomas">Thomas</label>
 					</div>
 					<div>
 						<input type="checkbox" name="personSelect" value="Rob">
-						<label for="Rob">Rob</label>
+						<label style='color: #40e0d0'for="Rob">Rob</label>
 					</div>
 					<div>
 						<input type="checkbox" name="personSelect" value="Kristina">
-						<label for="Kristina">Kristina</label>
+						<label style='color: #000000'for="Kristina">Kristina</label>
 					</div>
 
 					<div>
 						<input type="checkbox" name="personSelect" value="Marc-Andre">
-						<label for="Marc-Andre">Marc-Andre</label>
+						<label style='color: #7f25b0'for="Marc-Andre">Marc-Andre</label>
 					</div>
 					<div>
 						<input type="checkbox" name="personSelect" value="Dave">
-						<label for="Dave">Dave</label>
+						<label style='color: #f280e3'for="Dave">Dave</label>
 					</div>
 					<div>
 						<input type="checkbox" name="personSelect" value="Salina">
-						<label for="Salina">Salina</label>
+						<label style='color: #707070'for="Salina">Salina</label>
 					</div>
 					<div>
 						<input type="checkbox" name="personSelect" value="Harrison">
-						<label for="Harrison">Harrison</label>
+						<label style='color: #14ab03'for="Harrison">Harrison</label>
 					</div>
 				</form>
 
 				<input id='gotoActionInput' type="number"/>
-				<button id='gotoActionSubmit'>Goto Action</button>
+				<button id='gotoActionSubmit'>Go to update</button>
 
 				<h1 id='updateCounter'>Updates Displayed: 0</h1>
 				<h1 id='currentTime'>Current Time: </h1>
