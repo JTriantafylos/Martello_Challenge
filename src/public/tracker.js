@@ -423,7 +423,7 @@ function updateVisualization () {
     const queuedUpdatePerson = Object.values(people).filter(person => {
       return person.getName() === queuedUpdate['guest-id']
     })[0]
-    
+
     if (queuedUpdateDoor !== undefined) {
       var itt = 0
       selectedPeople.forEach(selectedPerson => {
@@ -537,10 +537,8 @@ function advanceTime () {
   const minutes = document.getElementById('advanceTimeMinutesInput').value
   const seconds = document.getElementById('advanceTimeSecondsInput').value
 
-  const timeAdvance = ((hours * 3600) + (minutes * 60) + seconds)
+  const timeAdvance = (parseInt(hours * 3600) + parseInt(minutes * 60) + parseInt(seconds))
   const newTime = parseInt(currentTime) + parseInt(timeAdvance)
-
-  console.log(newTime)
 
   if (newTime > endTime) {
     alert('Time too far in future! Please enter a valid time advance.')
@@ -552,18 +550,14 @@ function advanceTime () {
   let nextUpdateTime = Object.keys(visualizationArea.dataSet)[updateIndex + 1].time
 
   // Continue iterating through updates until an update after the new time is found
-  while (!(currentUpdateTime < newTime && nextUpdateTime >= newTime) && updateIndex < 500) {
+  while (!(currentUpdateTime < newTime && nextUpdateTime > newTime)) {
     // Iterate to the next update
     updateIndex++
     currentUpdateTime = Object.keys(visualizationArea.dataSet)[updateIndex]
     nextUpdateTime = Object.keys(visualizationArea.dataSet)[updateIndex + 1]
-
-    console.log('current: ' + currentUpdateTime)
-    console.log('new: ' + newTime)
-    console.log('next: ' + nextUpdateTime)
   }
 
-  gotoUpdate(updateIndex)
+  gotoUpdate(updateIndex + 2)
 }
 
 function selectPerson () {
