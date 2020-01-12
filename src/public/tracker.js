@@ -598,7 +598,7 @@ function advanceTime () {
   let nextUpdateTime = Object.keys(visualizationArea.dataSet)[updateIndex + 1].time
 
   // Continue iterating through updates until an update after the new time is found
-  while (!(currentUpdateTime < newTime && nextUpdateTime > newTime)) {
+  while (!(currentUpdateTime < newTime && nextUpdateTime >= newTime)) {
     // Iterate to the next update
     updateIndex++
     currentUpdateTime = Object.keys(visualizationArea.dataSet)[updateIndex]
