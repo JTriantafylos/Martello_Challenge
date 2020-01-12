@@ -316,21 +316,36 @@ function startVisualizer (dataSet) {
   receivers.room234MS = new Receiver(receiverID.MS3, 'Ice/Vending Machines', [363, 799], Colours.WHITE, receiverType.M_SENSOR, 2)
 
   visualizationArea.dataSet = dataSet
-  visualizationArea.start()
+  visualizationArea.setup()
 }
 
 // Visualization area object
 const visualizationArea = {
   canvas: document.createElement('canvas'),
   dataset: {},
+  paused: true,
 
   // Function to start the visualization
-  start: () => {
+  setup: () => {
     visualizationArea.canvas.width = 785
     visualizationArea.canvas.height = 857
     visualizationArea.canvas.context = visualizationArea.canvas.getContext('2d')
     document.body.insertBefore(visualizationArea.canvas, document.body.childNodes[0])
-    // visualizationArea.canvas.interval = setInterval(() => checkUpdate(visualizationArea.dataSet), 1)
+    drawDoors()
+  },
+  // Function to pause the visualization
+  play: () => {
+    if (visualizationArea.paused) {
+      visualizationArea.paused = false
+      visualizationArea.canvas.interval = setInterval(() => nextAction(), 500)
+    }
+  },
+  // Function to pause the visualization
+  pause: () => {
+    if (!visualizationArea.paused) {
+      visualizationArea.paused = true
+      clearInterval(visualizationArea.canvas.interval)
+    }
   },
   // Function to stop the visualization
   stop: () => {
@@ -349,6 +364,7 @@ function drawDoors () {
   Object.keys(doors).forEach(element => {
     const pos = doors[element].getPosition()
     const size = doors[element].getSize()
+    cont.globalAlpha = 1
     cont.fillStyle = doors[element].getColour()
     cont.fillRect(pos[0], pos[1], size[0], size[1])
   })
@@ -361,12 +377,16 @@ function drawReceivers () {
   const trackedPerson = Object.values(people).filter(person => {
     return person.name === tracking
   })[0]
+
   Object.keys(receivers).forEach(element => {
     if (receivers[element] === trackedPerson.getConnection()) {
       const pos = receivers[element].getPosition()
-      const size = receivers[element].getSize()
+      cont.globalAlpha = 0.5
       cont.fillStyle = trackedPerson.getColour()
-      cont.fillRect(pos[0], pos[1], size[0], size[1])
+      // cont.fillRect(pos[0], pos[1], size[0], size[1])
+      cont.beginPath()
+      cont.arc(pos[0], pos[1], 64, 0, 2 * Math.PI, false)
+      cont.fill()
     }
   })
 }
@@ -446,22 +466,24 @@ function updateVisualization () {
   // Draw receivers to the canvas
   drawReceivers()
 
-  document.getElementById('updateCounter').textContent = 'Updates displayed: ' + (queuedUpdateIndex + 1)
+  document.getElementById('updateCounter').textContent = 'Updates Displayed: ' + (queuedUpdateIndex + 1)
   document.getElementById('updateInfo').textContent = 'Update Info: ' + queuedUpdate.event + '|' + queuedUpdate['device-id'] + '|' + queuedUpdate['guest-id']
 }
 
-document.getElementById('nextAction').addEventListener('click', nextAction)
+document.getElementById('play').addEventListener('click', visualizationArea.play)
+document.getElementById('pause').addEventListener('click', visualizationArea.pause)
+document.getElementById('next').addEventListener('click', nextAction)
 function nextAction () {
   const dataSet = visualizationArea.dataSet
 
-  if (queuedUpdateIndex < Object.keys(dataSet).length) {
+  if (queuedUpdateIndex < Object.keys(dataSet).length - 1) {
+    // Update the visualization with the next action
+    updateVisualization()
+
     // Advance to the next queued update
     queuedUpdateIndex++
     queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
     queuedUpdateTimeSeconds = parseInt(Object.keys(dataSet)[queuedUpdateIndex])
     startTimeSeconds = parseInt(Object.keys(dataSet)[queuedUpdateIndex])
-
-    // Update the visualization with the next action
-    updateVisualization()
   }
 }
