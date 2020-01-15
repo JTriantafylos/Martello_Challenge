@@ -177,8 +177,9 @@ class Person extends Entity {
   setConnection (con) {
     this.connection = con
   }
-  setNewConnection(newCon){
-      this.newConnection = newCon;
+
+  setNewConnection (newCon) {
+    this.newConnection = newCon
   }
 }
 
@@ -398,7 +399,6 @@ function drawReceivers () {
           receivers[element].toggle()
         }
       }
-      
     })
   })
 }
@@ -445,7 +445,7 @@ function updateVisualization () {
 
       if (queuedUpdateReceiver !== undefined && queuedUpdatePerson !== undefined) {
         queuedUpdatePerson.setConnection([queuedUpdateReceiver, queuedUpdate.time])
-        queuedUpdatePerson.setNewConnection(true);
+        queuedUpdatePerson.setNewConnection(true)
       }
     }
   } else if (queuedUpdate.device === receiverType.M_SENSOR) {
@@ -493,13 +493,13 @@ function nextAction () {
     return
   }
 
-//   const lastPingList = document.getElementById('lastPingList')
-//   lastPingList.innerHTML = ''
-//   Object.values(people).forEach((person) => {
-//     const item = document.createElement('li')
-//     item.textContent = person.getName() + '\'s time since last move: ' + new Date(currentTime - parseInt(person.getConnection()[1])).getTime() + ' seconds' + ' | last AP: ' + person.getConnection()[0].name
-//     lastPingList.appendChild(item)
-//   })
+  //   const lastPingList = document.getElementById('lastPingList')
+  //   lastPingList.innerHTML = ''
+  //   Object.values(people).forEach((person) => {
+  //     const item = document.createElement('li')
+  //     item.textContent = person.getName() + '\'s time since last move: ' + new Date(currentTime - parseInt(person.getConnection()[1])).getTime() + ' seconds' + ' | last AP: ' + person.getConnection()[0].name
+  //     lastPingList.appendChild(item)
+  //   })
 
   // Advance to the next queued update
   queuedUpdateIndex++
@@ -645,6 +645,7 @@ personSelectCheckboxes.forEach((checkbox) => {
   checkbox.addEventListener('change', selectPerson)
 })
 
+// eslint-disable-next-line no-unused-vars
 function mouseTracker (e) {
   var x = e.clientX
   var y = e.clientY
@@ -730,28 +731,28 @@ function mouseTracker (e) {
 }
 
 // Request the dataset from the back end
+// eslint-disable-next-line no-undef
 requestDataSet((dataSet) => {
   dataSet = JSON.parse(dataSet)
   queuedUpdate = dataSet[Object.keys(dataSet)[queuedUpdateIndex]]
   startVisualizer(dataSet)
 })
 
+class AccessP {
+  constructor (name, position, adjacentRooms, level) {
+    this.name = name
+    this.position = position
+    this.adjacentRooms = adjacentRooms
+    this.level = level
+  }
 
+  getAdjacentRooms () {
+    return this.adjacentRooms
+  }
 
-class AccessP{
-    constructor(name, position, adjacentRooms, level) {
-        this.name = name;
-        this.position = position;
-        this.adjacentRooms = adjacentRooms;
-        this.level = level
-
-    }
-    getAdjacentRooms(){
-        return this.adjacentRooms;
-    }
-    getName(){
-        return this.name;
-    }
+  getName () {
+    return this.name
+  }
 }
 
 // doing the prediction
@@ -778,74 +779,60 @@ function findSensor (roomNum) {
   })
   return ret
 }
-function predict(){
-    let murderRoom = '210';
-    let sensor = findSensor(murderRoom);
-    let inSensor = []
-    let suspectsSensor = {}
-    let suspectsIrregular = {}
+function predict () {
+  const murderRoom = '210'
+  const sensor = findSensor(murderRoom)
+  const inSensor = []
+  const suspectsSensor = {}
+  const suspectsIrregular = {}
 
-    gotoUpdate(451);
-    Object.keys(people).forEach(person=>{
-        if((people[person]).getConnection()[0].getName() == sensor.getName()){
-            inSensor.push(people[person])
-        }
-        
-    })
-
-    //deciding longest
-    let smallest = queuedUpdate.time;
-    let victim
-    for(var i = 0; i<inSensor.length; i++){
-        
-        if(inSensor[i].connection[1] < smallest){
-            victim = inSensor[i]
-            smallest = inSensor[i].connection[1]
-        }
+  gotoUpdate(451)
+  Object.keys(people).forEach(person=>{
+    if((people[person]).getConnection()[0].getName() == sensor.getName()) {
+      inSensor.push(people[person])
     }
-    
+  })
 
-    //parse through night again and look at occurrences at the sensor
-    for(var t = 0; t<451; t++){
-        gotoUpdate(t);
-        if(parseInt(queuedUpdate.time) >= victim.connection[1]){
-            
-            if( parseInt(queuedUpdate.time) >= 1578200400 && parseInt(queuedUpdate.time) <=1578218400){
-                Object.keys(people).forEach(person=>{
-                    if(people[person].newConnection===true && people[person].name != victim.name){
-                        if(!suspectsIrregular[people[person].name]){
-                            suspectsIrregular[people[person].name] = 1
-                        } else {
-                            suspectsIrregular[people[person].name] += 1
-                        }
-                        people[person].setNewConnection(false)
-                        
-                    }
-                    
-                    
-                })
+  //deciding longest
+  let smallest = queuedUpdate.time
+  let victim
+  for(var i = 0; i < inSensor.length; i++) {
+    if(inSensor[i].connection[1] < smallest) {
+      victim = inSensor[i]
+      smallest = inSensor[i].connection[1]
+    }
+  }
+  // parse through night again and look at occurrences at the sensor
+  for(var t = 0; t < 451; t++) {
+    gotoUpdate(t)
+    if(parseInt(queuedUpdate.time) >= victim.connection[1]) {
+      if(parseInt(queuedUpdate.time) >= 1578200400 && parseInt(queuedUpdate.time) <== 1578218400){
+        Object.keys(people).forEach(person =>{
+          if(people[person].newConnection === true && people[person].name !== victim.name) {
+            if(!suspectsIrregular[people[person].name]) {
+              suspectsIrregular[people[person].name] = 1
+            } else {
+              suspectsIrregular[people[person].name] += 1
             }
-            Object.keys(people).forEach(person=>{
-                if(people[person].connection[0].name === sensor.name && people[person].name != victim.name){
-                    if(!suspectsSensor[people[person].name]){
-                        suspectsSensor[people[person].name] = 1
-                    } else {
-                        suspectsSensor[people[person].name] += 1
-                    }
-                    
-                }
-                
-                
-            })
+            people[person].setNewConnection(false)
+          }
+        })
+      }
+      Object.keys(people).forEach(person=>{
+        if(people[person].connection[0].name === sensor.name && people[person].name != victim.name) {
+          if(!suspectsSensor[people[person].name]) {
+            suspectsSensor[people[person].name] = 1
+          } else {
+            suspectsSensor[people[person].name] += 1
+          }
         }
+      })
     }
-    //console.log(suspectsIrregular)
-    let out = 'The Victim is most likely '+ victim.name + ' and the suspectsSensor are '
-    Object.keys(suspectsSensor).forEach(element=>{
-        
-        out+= '\n - ' + element;
-    })
-    alert(out)
-    
-    
+  }
+  //console.log(suspectsIrregular)
+  let out = 'The Victim is most likely '+ victim.name + ' and the suspects are '
+  Object.keys(suspectsSensor).forEach(element=>{
+    out+= '\n - ' + element
+  })
+  alert(out)
 }
